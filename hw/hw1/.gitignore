@@ -1,0 +1,5 @@
+## Ignore all Bitly related files
+EDA/*
+report/*
+slides/*
+data/*
