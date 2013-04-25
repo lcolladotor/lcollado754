@@ -1,0 +1,167 @@
+$n = 20$, Design I, Correlation Exchangeable or AR-1, $\alpha = 0.5, 0.9$
+============================================================
+
+# Emily and Leo
+
+Define the x and x beta.
+```{r}
+X <- c(8, 10, 12, 14)
+beta0 <- 0
+beta1 <- 0.6
+xbeta <- beta0 + beta1 * X
+```
+
+
+Determine the correlation matrix assuming S is the identity matrix.
+```{r}
+alpha <- 0.5
+V <- matrix(alpha, ncol=4, nrow=4)
+diag(V) <- 1
+```
+
+
+Generate Ys.
+```{r}
+library(mvtnorm)
+set.seed(20130418)
+data <- rmvnorm(n=20, mean=xbeta, sigma=V)
+
+## Explore the result
+head(data)
+
+## Check the result
+colMeans(data)
+xbeta
+```
+
+Group the data for using gee()
+```{r}
+## Group the data
+df <- data.frame(X = rep(X, each=20), Y=as.vector(data), id=rep(1:20, 4))
+## Remember to sort it!
+df.sorted <- df[order(df$id), ]
+head(df.sorted)
+```
+
+Fit the GEE
+```{r}
+library(gee)
+fit <- gee(Y ~ X, id=id, data=df.sorted, corstr="exchangeable")
+summary(fit)
+```
+
+Find the coverage
+```{r}
+est <- fit$coefficients[2]
+sErr <- diag(sqrt(fit$robust.variance))[2]
+cov <- (est + 1.96*sErr > 0.6) & (est - 1.96*sErr < 0.6)
+cov
+```
+
+
+Lets make it a function
+```{r}
+runOne <- function(wcorr, xbeta, V) {
+	## Generate data at random
+	data <- rmvnorm(n=20, mean=xbeta, sigma=V)
+	
+	## Organize it
+	df <- data.frame(X = rep(X, each=20), Y=as.vector(data), id=rep(1:20, 4))
+	## Remember to sort it!
+	df.sorted <- df[order(df$id), ]
+	
+	## Fit the GEE
+	if(wcorr=="AR-M") {
+		fit <- gee(Y ~ X, id=id, data=df.sorted, corstr=wcorr, Mv=1, silent=TRUE)
+	} else {
+		fit <- gee(Y ~ X, id=id, data=df.sorted, corstr=wcorr, silent=TRUE)
+	}
+	
+	est <- fit$coefficients[2]
+	
+	## Find if it's covered
+	sErr <- diag(sqrt(fit$robust.variance))[2]
+	cov <- (est + 1.96*sErr > 0.6) & (est - 1.96*sErr < 0.6)
+	
+	## Done
+	return(c(cov, sErr^2))
+}
+vMat <- function(x,alpha){
+  nObs <- length(x)
+  vMat <- matrix(NA,nrow=nObs,ncol=nObs)
+  for(i in 1:nObs){
+    vMat[i,] <- alpha^abs((x-x[i])/2)
+  } 
+  return(vMat)
+}
+runAll <- function(tcorr="exchangeable", wcorr="independence", alpha, xbeta, n=100) {
+	## Make the sigma matrix
+	if(tcorr == "exchangeable") {
+		V <- matrix(alpha, ncol=4, nrow=4)
+		diag(V) <- 1
+	} else {
+		V <- vMat(xbeta, alpha)
+	}
+	
+	
+	## Random data + GEE
+	res <- sapply(1:n, function(i) { runOne(wcorr=wcorr, xbeta=xbeta, V=V) })
+	
+	## Calculate the percent covered
+	final <- rowMeans(res)
+	return(final)
+}
+
+```
+
+Now lets run the function
+
+```{r, message=FALSE, warning=FALSE}
+x1 <- matrix(NA, ncol=2, nrow=12)
+set.seed(20130425)
+x1[1, ] <- runAll(alpha=0.5, xbeta=xbeta)
+set.seed(20130425)
+x1[2, ] <- runAll(alpha=0.5, xbeta=xbeta, wcorr="exchangeable")
+set.seed(20130425)
+x1[3, ] <- runAll(alpha=0.5, xbeta=xbeta, wcorr="AR-M")
+set.seed(20130425)
+x1[4, ] <- runAll(alpha=0.9, xbeta=xbeta)
+set.seed(20130425)
+x1[5, ] <- runAll(alpha=0.9, xbeta=xbeta, wcorr="exchangeable")
+set.seed(20130425)
+x1[6, ] <- runAll(alpha=0.9, xbeta=xbeta, wcorr="AR-M")
+set.seed(20130425)
+x1[7, ] <- runAll(tcorr="ar1", alpha=0.5, xbeta=xbeta)
+set.seed(20130425)
+x1[8, ] <- runAll(tcorr="ar1", alpha=0.5, xbeta=xbeta, wcorr="exchangeable")
+set.seed(20130425)
+x1[9, ] <- runAll(tcorr="ar1", alpha=0.5, xbeta=xbeta, wcorr="AR-M")
+set.seed(20130425)
+x1[10, ] <- runAll(tcorr="ar1", alpha=0.9, xbeta=xbeta)
+set.seed(20130425)
+x1[11, ] <- runAll(tcorr="ar1", alpha=0.9, xbeta=xbeta, wcorr="exchangeable")
+set.seed(20130425)
+x1[12, ] <- runAll(tcorr="ar1", alpha=0.9, xbeta=xbeta, wcorr="AR-M")
+
+## Add relative efficiency
+colnames(x1) <- c("Coverage", "VarBeta1")
+relEff <- c(x1[1:3,2] / x1[2, 2], x1[4:6,2] / x1[5, 2], x1[7:9,2] / x1[8, 2], x1[10:12,2] / x1[11, 2])
+alpha <- rep(rep(c(0.5, 0.9), each=3), 2)
+wcorr <- rep(c("independence", "exchangeable", "AR-1"), 4)
+tcorr <- rep(c("exchangeable", "AR-1"), each=6)
+result <- data.frame(cbind(x1, relEff, alpha, wcorr, tcorr))
+```
+
+Print the summary of the results
+```{r}
+result
+```
+
+
+
+
+Session info
+```{r}
+sessionInfo()
+```
+
