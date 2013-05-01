@@ -20,7 +20,7 @@ trainingPath <- "/Users/lcollado/Google Drive/Yelp-Recruit/yelp_training_set"
 
 ## This function processes the columns of the initial data.frame read in from the JSON format (they are lists).
 ## It does more processing in the case of multi-level lists such as the categories in business data file.
-fExtract <- function(lraw, checkin) {
+fExtract <- function(lraw, checkin, review) {
 	## Replace NULL's by NA's
 	l <- lapply(lraw, function(x) { 
 		res <- x
@@ -34,21 +34,26 @@ fExtract <- function(lraw, checkin) {
 		if(checkin) {
 			l <- lapply(l, function(y) { rep(names(y), y) })
 		}
-		l.melt <- melt(l, as.matrix)
-		l.cast <- dcast(l.melt, L1 ~ value)
-		## Remove L1 and NA columns
-		l.cast <- l.cast[, -c(1, ncol(l.cast))]
-		## Convert to logic matrix
-		l.logic <- apply(l.cast, 1:2, is.na)
-		## Keep only the columns present more than 5% (or all for checkins), record the total number of columns
-		l.na <- 1 - colMeans(l.logic)
-		if(checkin) {
-			l.top <- names(l.na)
+		if(review) {
+			l.cast <- do.call(rbind, l)
+		} else {
+			l.melt <- melt(l, as.matrix)
+			l.cast <- dcast(l.melt, L1 ~ value)
+			## Remove L1 and NA columns
+			l.cast <- l.cast[, -c(1, ncol(l.cast))]
+		}		
+		
+		if(checkin | review) {
+			l.top <- colnames(l.cast)
 			l.total <- rowSums(l.cast)
 			use <- l.cast
 		} else {
+			## Convert to logic matrix
+			l.logic <- apply(l.cast, 1:2, function(x) { !is.na(x) })
+			## Keep only the columns present more than 5% (or all for checkins), record the total number of columns
+			l.na <- colMeans(l.logic)
 			l.top <- names(sort(l.na[l.na >= 0.05], decreasing=TRUE))
-			l.total <- ncol(l.logic) - rowSums(l.logic)
+			l.total <- rowSums(l.logic)
 			use <- l.logic
 		}
 		## Choose the names of the new columns: remove spaces and other special symbols
@@ -61,7 +66,7 @@ fExtract <- function(lraw, checkin) {
 }
 
 ## Function that reads in the json files
-readJSON <- function(dirPath, fileName, parallel=FALSE, checkin=FALSE) {
+readJSON <- function(dirPath, fileName, parallel=FALSE, checkin=FALSE, review=FALSE) {
 	## Complete the full file path
 	url <- paste(dirPath, fileName, sep="/")
 	
@@ -78,7 +83,7 @@ readJSON <- function(dirPath, fileName, parallel=FALSE, checkin=FALSE) {
 	data.df <- data.frame(data.mat, stringsAsFactors = FALSE)
 
 	## Fix the data.frame so all columns are character vectors and not lists	
-	data.processed <- llply(data.df, fExtract, checkin=checkin, .parallel=parallel)
+	data.processed <- llply(data.df, fExtract, checkin=checkin, review=review, .parallel=parallel)
 	result <- as.data.frame(data.processed)
 	
 	## Done
@@ -100,8 +105,9 @@ trainingFiles <- list.files(trainingPath)
 names(trainingFiles) <- gsub("(^.*set_)|(.json)", "", trainingFiles)
 trainingData <- lapply(trainingFiles, function(x) {
 	checkin <- grepl("checkin", x)
+	review <- grepl("review|user", x)  # due to the votes variable
 	print(x)
-	readJSON(trainingPath, x, parallel=TRUE, checkin=checkin)
+	readJSON(trainingPath, x, parallel=TRUE, checkin=checkin, review=review)
 })
 save(trainingData, file="trainingData.Rdata")
 
