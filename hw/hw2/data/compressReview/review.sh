@@ -1,6 +1,6 @@
 #!/bin/bash	
 #$ -cwd 
-#$ -l mem_free=50G,h_vmem=80G,h_fsize=20G
+#$ -l jabba,mem_free=50G,h_vmem=80G,h_fsize=20G
 #$ -m e 
 #$ -N hw2review
 #$ -pe local 20
