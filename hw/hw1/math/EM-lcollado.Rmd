@@ -1,0 +1,67 @@
+EM math question
+================
+
+Instructions [here](https://docs.google.com/document/d/1eQ_MsTKgfI61wu0RZOOTjQY408chI9MRineNtAtzfOs/edit)
+
+# Math part
+
+To do
+
+# Simulation
+
+
+First, I generate the simulated data
+
+```{r}
+## Params
+n <- 100
+mu <- c(4, 5)
+sigma <- 1
+
+## Complete
+set.seed(20130416)
+completeData <- as.vector(sapply(mu, function(m) {
+	rnorm(n, mean=m, sd=sqrt(sigma))
+}))
+
+## Then censor
+set.seed(20130416)
+censor <- sample(0:1, size=2 * n, replace=TRUE)
+
+##
+idx <- which(censor == 1)
+adjust <- runif(n=length(idx), min=0.1, max=0.9)
+obsData <- completeData
+obsData[idx] <- obsData[idx]  - (abs(obsData[idx]) * adjust)
+
+## Format the data
+data <- data.frame(obs = obsData, censor = censor, real = completeData)
+head(data)
+summary(data)
+
+## Check that things are working
+hist(data$real - data$obs, col="light blue")
+```
+
+Next, I try to run the EM algorithm from the __emplik__ package.
+
+```{r}
+library(emplik)
+
+## Now I format the data in the way that emplik expects it to be
+dataE <- data
+dataE$censor <- ifelse(dataE$censor == 0, 1, 2)
+
+## I don't understand how you define this function
+foo <- function(y, xmat) {
+	temp <- y - (1 + 2 * xmat)
+	return(cbind(temp, xmat*temp))
+}
+
+## foobar results
+res <- el.cen.EM2(x=dataE$obs, d=dataE$censor, mu=c(0.25, 0.75), fun=foo, xmat=dataE$obs)
+res
+
+
+```
+
