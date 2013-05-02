@@ -1,0 +1,188 @@
+% Document type and font specification
+\documentclass[11pt]{article}
+
+% Margin specification
+% Check http://en.wikibooks.org/wiki/LaTeX/Page_Layout for more info
+\usepackage[margin = 1in]{geometry}
+\usepackage[nottoc,notlof,notlot,numbib]{tocbibind}
+
+% Some misc and math packages
+% Check http://en.wikibooks.org/wiki/LaTeX/Mathematics for more info
+\usepackage{fancyhdr}
+\usepackage{manfnt}
+\usepackage{pgf}
+\usepackage{amsmath,amsthm,amssymb,graphicx}
+\usepackage{amsfonts}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage{mathrsfs} %mathscr{A}
+\usepackage{hyperref,graphicx}
+
+% Bibliography
+\usepackage[style=numeric,firstinits=true]{biblatex}
+% Specify bib files
+\addbibresource{report.bib}
+
+% Color
+\usepackage{color}
+
+% For specifying the counter style of enumerate
+\usepackage{enumerate}
+
+% Page style definition
+\pagestyle{fancy}
+% Customize this to your liking.
+\lhead{}\chead{}\rhead{By \myurlshort{http://biostat.jhsph.edu/~lcollado/}{L. Collado-Torres}}\lfoot{}\cfoot{\thepage}\rfoot{\today}
+
+% Line space
+\usepackage{setspace}
+% Default is normal, but un-comment below to your liking
+% \onehalfspacing
+% \doublespacing
+
+% Caption and figure def
+% Check http://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions for more info
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{wrapfig}
+
+% Math theorems shortcuts
+% Check http://en.wikibooks.org/wiki/LaTeX/Theorems for more info
+\usepackage{mathtools}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}[thm]
+\newtheorem{cor}{Corollary}[thm]
+\newtheorem{defi}{Definition}
+\newtheorem{conj}{Conjecture}
+\newtheorem{prop}{Proposition}
+\newtheorem{ex}{Example}
+\newtheorem{claim}{Claim}
+\newtheorem{fact}{Fact}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Some inherited commands
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\myurlshort}[2]{\href{#1}{\textcolor{gray}{\textsf{#2}}}}
+
+% knitr options
+<<setup, include=FALSE, cache=FALSE>>=
+# set global chunk options
+opts_chunk$set(fig.path='fig-', fig.align='center', fig.show='hold', fig.width=7, fig.height=7, out.width='.8\\linewidth')
+options(width=90)
+@
+
+
+\begin{document}
+
+%\begin{titlepage}
+\begin{center}
+
+% Actual title
+{ \bfseries Yelp recruitment Kaggle competition: a first pass}\\%[0.3cm]
+\textsc{Advanced Methods IV 140.754}\\
+\normalsize
+\end{center}
+% \end{titlepage}
+
+%%%%%%%%%% Write document %%%%%%%%%%%%%%
+\section{Introduction}
+Yelp \cite{yelp} is an internet company that provides users with information about businesses in their neighborhood. They are currently hosting a Kaggle competition and offering job interviews to the winner and other top players \cite{yelpkaggle}. The goal of the competition is to predict the number of \emph{useful} votes a review gets. Yelp provides competitors with a training data set with 229,907 reviews and a test data set of 22,957 reviews.
+
+\section{Methods}
+
+\subsection{Data Processing}
+
+We initially read the data intoe \texttt{R} \cite{R} using the packages \texttt{plyr} \cite{plyr}, \texttt{RJSONIO} \cite{RJSONIO}, \texttt{reshape2} \cite{reshape2}, and \texttt{doMC} \cite{doMC} for faster computation times and decomposing the nested lists. We extracted the number of occurrences for the top 200 words from the text reviews using the \texttt{tau} \cite{tau} package through a process known as tokenizing in Natural Language Processing (NLP) vocabulary. Some of the punctuation characters might be influential in determining how helpful a review is; like the number of spaces compared to the number of lines. For the business address, we extracted the zipcode and discarded the detailed information. Overall, the zip code should help differentiate up and coming neighborhoods from declining ones. 
+
+We then proceeded to collapse the information from the four tables (user, business, checkin and review) into a single table where each row represented a unique review. For the purpose of this work, we retained only the top 50 words and discarded the detailed checkin information, although this could be used in more detailed analyses.
+
+To allow for an internal comparison, we further separated at random the training data set into two groups: a validation set and the actual training set with probabilities 0.3 and 0.7 respectively for each review.
+
+\subsection{Finding models}
+
+Overall, the strategy we followed was to fit a model with the train data set and if possible, perform 10 fold cross-validation on each model. We then evaluated the performance of the model on the validation data set. These results were then used to select the final models to be used in the competition.
+
+\subsubsection{Linear regression}
+
+A multivariate linear regression was used with all the variables and from this model two other models were determined via step wise selection using AIC and BIC criteria respectively. The three models were then cross validated using the \texttt{cvTools} \cite{cvTools} package. We used 10 fold cross validation with 5 replicates. 
+
+\subsubsection{Generalized Linear Model: Poisson}
+
+Similarly to what was done with linear regression, we constructed a model using Generalized Linear Models (GLM) with a Poisson family. Then two other models were selected for using AIC and BIC criteria. Then, cross validation was performed as in the case of the linear regression model using \texttt{cvTools} \cite{cvTools}.
+
+\subsubsection{Generalized Boosted Regression Model: Poisson}
+
+We fit a Generalized Boosted Regression (GBM) model using the Poisson distribution---since we are dealing with counts---using the \texttt{gbm} \cite{gbm} package. We used 10 fold cross validation and chose to use 500 trees, although using more might lead to better results.
+
+\subsubsection{Random forest}
+
+We built a random forest for regression using the \texttt{randomForest} \cite{rf} package. Instead of performing cross validation, we sought to build a large forest (2000 trees) using the \texttt{foreach} \cite{foreach} package and a larger number of cores. However, this computation is still ongoing.
+
+\section{Results}
+
+\subsection{Models}
+
+\subsubsection{Linear regression}
+
+The best resulting model, by a very minor margin was the linear regression using the AIC criterion when performing the model selection. Interestingly, all three models performed nearly identically on the validation data set when evaluating using the root mean squared prediction error (RMSPE). However, it is important to note that linear regression will yield predictions below 0, which are not possible. Nevertheless, after rounding all negative predictions to 0, the root mean squared log prediction error (RMSLPE)---which is the one used when evaluating the predictions in this competition---is 0.5907 with a standard error (SE) of 0.001635 in the validation data set. This would currently grant a top 100 (out of 147) spot in the leader board.
+
+\subsubsection{GLM: Poisson}
+
+Compared to the linear regression model, in this case there was more variation between the three models with the BIC model outperforming the other two. However, when using RMSLPE to evaluate their performance on the validation data set, BIC was the lowest with 0.6504 and SE of 0.03593, which is worse than the linear regression models. However, these results are not definitive as they were fit with a subset of the training data for computation time purposes.
+
+\subsubsection{GBM: Poisson}
+
+The GBM model performed very similarly to the GLM model when using the validation data set (RMSLPE of 0.6545 with SE of 0.001495). However, it did so by predicting useful votes between 1.2 and 1.78 for each review. That is, with much limited variability.
+
+\subsection{Random forest}
+
+A smaller random forest was fit on a very small sample of the data, and it's RMSPE is similar to the linear regression model one.
+
+\subsection{Predictions}
+
+<<preds, echo=FALSE, fig.cap="Predictions from the best linear model (lm), best glm, the gbm cross-validated and the random forest (rf) for the test data given by Yelp. Red lines represent lowess smoothers. Showing the first 5000 points.", warning=FALSE, message=FALSE>>=
+## Graphing lib
+library(car)
+
+## Load preds
+load("../model/predict/preds.Rdata")
+
+## Make the nice plot
+scatterplotMatrix(~ lm + gbm + glm + rf, data=head(preds, 5000), reg.line=FALSE, cex=0.2, spread=FALSE)
+@
+
+
+Using the linear model selected using AIC, the GLM model selected using BIC (*), the GBM and the random forest (*:= using subset of the training data), we calculated the predictions for the test data given by Yelp as shown in Figure \ref{fig:preds}. Note that for the linear regression, negative values were rounded to 0. Interestingly, each prediction method has a different relationship with one another, where the linear regression and the random forest are the closest to each other. 
+
+We thus used the mean of the predictions for each review and submitted this as our first entry to the Kaggle competition, resulting in a score of 0.56667 and placing in position 73 of the leader board. This is above the \emph{all zeros benchmark} and the \emph{global mean value benchmark}, although far from Muschelli's 0.50930 in rank 30.
+
+\section{Conclusions}
+
+Using the top 50 words, the total number of checkins, zip code and the information given from the user and business tables, we built a prediction algorithm for the Yelp Kaggle contest by combining the predictions from several models into one. While some of them have not completed running with the full data (glm and random forest), the preliminary results are promising by ranking in the top 50\% of the leader board. 
+
+However, further analysis needs to be carried out to carefully identify if any other of the top words or the finer information of the checkin table can be used to improve the results. In addition, it is important to consider that the linear regression model in theory is not limited to the positive real line and can thus be working poorly. Finally, it will be important to consider the effect of rounding the predictions to integers. For instance, by rounding the predictions the score deteriorates from 0.56667 to 0.62584. In other words, the way Yelp is evaluating the competition promotes submitting non-rounded values which in a way are not realistic.
+
+\section{References and acknowledgements}
+
+Muschelli told me that you could use \texttt{foreach} when running \texttt{randomForest}.
+
+The code for this project is available at \url{https://github.com/lcolladotor/lcollado754/tree/master/hw/hw2}.
+
+\printbibliography
+
+
+
+% For references, uncomment and remember to use the following series
+% when compling the pdf:
+% R Sweave, pdflatex, bibtex, pdflatex, pdflatex, open pdf
+% \printbibliography
+
+% Uncomment if you want to add the R session information
+%\tiny
+%<<info, results='asis', echo = FALSE>>=
+%toLatex(sessionInfo())
+%@
+
+
+
+\end{document}

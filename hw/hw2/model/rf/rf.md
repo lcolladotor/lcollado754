@@ -47,6 +47,14 @@ library("doSNOW")
 ```r
 cores <- 4
 registerDoSNOW(makeCluster(cores, type = "SOCK"))
+getDoParWorkers()
+```
+
+```
+## [1] 4
+```
+
+```r
 
 ## Data
 load("../lm/trainC.Rdata")
@@ -76,12 +84,12 @@ valy <- validateC$votes.useful
 
 
 
-Just fit one big random forest
+Just fit one big random forest (2000 trees)
 
 ```r
 
 ## Fit random forests
-rf <- foreach(ntree = rep(50, cores), .combine = combine, .packages = "randomForest") %dopar% 
+rf <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% 
     randomForest(x = trainx, y = trainy, data = trainC, xtest = valx, ytest = valy, 
         importance = TRUE, keep.forest = TRUE, ntree = ntree)
 
@@ -101,7 +109,7 @@ unlist(lapply(e.rf, function(x) {
 ```
 
 ```
-## [1] 2.231 2.002
+## [1] 2.231 1.997
 ```
 
 ```r
@@ -111,7 +119,7 @@ unlist(lapply(e.rf, function(x) {
 ```
 
 ```
-## [1] 0.1992 0.0421
+## [1] 0.20142 0.04219
 ```
 
 ```r
@@ -128,7 +136,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##   6.959   0.471  13.538
+##   8.583   0.490  17.313
 ```
 
 ```r

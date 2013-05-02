@@ -217,7 +217,13 @@ library(&quot;doSNOW&quot;)
 
 <pre><code class="r">cores &lt;- 4
 registerDoSNOW(makeCluster(cores, type = &quot;SOCK&quot;))
+getDoParWorkers()
+</code></pre>
 
+<pre><code>## [1] 4
+</code></pre>
+
+<pre><code class="r">
 ## Data
 load(&quot;../lm/trainC.Rdata&quot;)
 
@@ -244,11 +250,11 @@ valx &lt;- validateC[, !colnames(validateC) %in% c(&quot;user_id&quot;, &quot;bu
 valy &lt;- validateC$votes.useful
 </code></pre>
 
-<p>Just fit one big random forest</p>
+<p>Just fit one big random forest (2000 trees)</p>
 
 <pre><code class="r">
 ## Fit random forests
-rf &lt;- foreach(ntree = rep(50, cores), .combine = combine, .packages = &quot;randomForest&quot;) %dopar% 
+rf &lt;- foreach(ntree = rep(100, cores), .combine = combine, .packages = &quot;randomForest&quot;) %dopar% 
     randomForest(x = trainx, y = trainy, data = trainC, xtest = valx, ytest = valy, 
         importance = TRUE, keep.forest = TRUE, ntree = ntree)
 
@@ -267,7 +273,7 @@ unlist(lapply(e.rf, function(x) {
 }))
 </code></pre>
 
-<pre><code>## [1] 2.231 2.002
+<pre><code>## [1] 2.231 1.997
 </code></pre>
 
 <pre><code class="r">unlist(lapply(e.rf, function(x) {
@@ -275,7 +281,7 @@ unlist(lapply(e.rf, function(x) {
 }))
 </code></pre>
 
-<pre><code>## [1] 0.1992 0.0421
+<pre><code>## [1] 0.20142 0.04219
 </code></pre>
 
 <pre><code class="r">
@@ -288,7 +294,7 @@ save(rf, e.rf, file = &quot;rf.Rdata&quot;)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   6.959   0.471  13.538
+##   8.583   0.490  17.313
 </code></pre>
 
 <pre><code class="r">sessionInfo()
