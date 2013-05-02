@@ -186,7 +186,7 @@ load(&quot;../compressReview-small-quick/trainingReview.Rdata&quot;)
 review &lt;- trainingReview
 
 ## Testing
-test &lt;- TRUE
+test &lt;- FALSE
 if (test) {
     review &lt;- review[1:1000, ]
 }
@@ -201,8 +201,8 @@ table(idx)
 </code></pre>
 
 <pre><code>## idx
-##   1   2 
-## 319 681
+##      1      2 
+##  68753 161154
 </code></pre>
 
 <pre><code class="r">
@@ -212,13 +212,13 @@ train &lt;- review[idx == 2, ]
 print(object.size(validate), units = &quot;Mb&quot;)
 </code></pre>
 
-<pre><code>## 22.6 Mb
+<pre><code>## 48 Mb
 </code></pre>
 
 <pre><code class="r">print(object.size(train), units = &quot;Mb&quot;)
 </code></pre>
 
-<pre><code>## 22.7 Mb
+<pre><code>## 82.5 Mb
 </code></pre>
 
 <pre><code class="r">save(validate, train, idx, file = &quot;train.Rdata&quot;)

@@ -8,7 +8,7 @@ load("../compressReview-small-quick/trainingReview.Rdata")
 review <- trainingReview
 
 ## Testing
-test <- TRUE
+test <- FALSE
 if (test) {
     review <- review[1:1000, ]
 }
@@ -24,8 +24,8 @@ table(idx)
 
 ```
 ## idx
-##   1   2 
-## 319 681
+##      1      2 
+##  68753 161154
 ```
 
 ```r
@@ -37,7 +37,7 @@ print(object.size(validate), units = "Mb")
 ```
 
 ```
-## 22.6 Mb
+## 48 Mb
 ```
 
 ```r
@@ -45,7 +45,7 @@ print(object.size(train), units = "Mb")
 ```
 
 ```
-## 22.7 Mb
+## 82.5 Mb
 ```
 
 ```r
