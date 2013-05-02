@@ -9,7 +9,7 @@ library(cvTools)
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- TRUE
+test <- FALSE
 if(test) {
 	trainC <- trainC[1:1000, ]
 }
