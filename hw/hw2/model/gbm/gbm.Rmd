@@ -7,13 +7,6 @@ Setup
 library(gbm)
 library(cvTools)
 
-## Following http://stackoverflow.com/questions/7830255/suggestions-for-speeding-up-random-forests
-library("foreach")
-library("doSNOW")
-cores <- 20
-registerDoSNOW(makeCluster(cores, type="SOCK"))
-getDoParWorkers()
-
 ## Data
 load("../lm/trainC.Rdata")
 
@@ -31,17 +24,17 @@ if(test) {
 
 
 ## Training set for CV
-trainx <- trainC[, !colnames(trainC) %in% "votes.useful"]
-trainy <- trainC$votes.useful
+#trainx <- trainC[, !colnames(trainC) %in% "votes.useful"]
+#trainy <- trainC$votes.useful
 
 ## Test set for running rf
-valx <- validateC[, !colnames(validateC) %in% c("user_id", "business_id", "review_id", "user.name", "business.city", "votes.useful")]
-valy <- validateC$votes.useful
+#valx <- validateC[, !colnames(validateC) %in% c("user_id", "business_id", "review_id", "user.name", "business.city", "votes.useful")]
+#valy <- validateC$votes.useful
 
 ```
 
 
-Just fit one big random forest (2000 trees)
+Just fit one gbm with 10-fold CV
 ```{r models}
 
 ## Fit random forests

@@ -16,10 +16,6 @@ library(cvTools)
 ## Loading required package: robustbase
 ```
 
-```
-## Loading required package: methods
-```
-
 ```r
 
 ## Data
@@ -28,6 +24,9 @@ load("../lm/trainC.Rdata")
 test <- TRUE
 if (test) {
     trainC <- trainC[1:1000, ]
+}
+rmlspe <- function(y, yHat, includeSE = FALSE) {
+    rmspe(log(y + 1), log(yHat + 1), includeSE = includeSE)
 }
 ```
 
@@ -190,7 +189,7 @@ summary(fit.pois)
 ## business.zipcode                    ***
 ## checkin.total                          
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
@@ -259,7 +258,7 @@ summary(fit.pois.aic)
 ## business.stars                    1.53e-01   5.38e-02    2.84  0.00449 ** 
 ## business.zipcode                 -1.05e-03   2.29e-04   -4.59  4.4e-06 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
@@ -309,7 +308,7 @@ summary(fit.pois.bic)
 ## business.stars         1.85e-01   5.30e-02    3.49  0.00049 ***
 ## business.zipcode      -9.77e-04   2.23e-04   -4.38  1.2e-05 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
@@ -330,12 +329,15 @@ set.seed(seed)
 folds <- cvFolds(nrow(trainC), K = K, R = R)
 
 ## Run the cross-validation
-cv.pois <- cvFit(fit.pois, y = trainC$votes.useful, data = trainC, cost = rmspe, 
-    costArgs = list(includeSE = TRUE), folds = folds)
-cv.pois.aic <- cvFit(fit.pois.aic, y = trainC$votes.useful, data = trainC, cost = rmspe, 
-    costArgs = list(includeSE = TRUE), folds = folds)
-cv.pois.bic <- cvFit(fit.pois.bic, y = trainC$votes.useful, data = trainC, cost = rmspe, 
-    costArgs = list(includeSE = TRUE), folds = folds)
+cv.pois <- cvFit(fit.pois, y = trainC$votes.useful, data = trainC, cost = rmlspe, 
+    costArgs = list(includeSE = TRUE), predictArgs = list(type = "response"), 
+    folds = folds)
+cv.pois.aic <- cvFit(fit.pois.aic, y = trainC$votes.useful, data = trainC, cost = rmlspe, 
+    costArgs = list(includeSE = TRUE), predictArgs = list(type = "response"), 
+    folds = folds)
+cv.pois.bic <- cvFit(fit.pois.bic, y = trainC$votes.useful, data = trainC, cost = rmlspe, 
+    costArgs = list(includeSE = TRUE), predictArgs = list(type = "response"), 
+    folds = folds)
 
 cv.sel <- cvSelect(pois = cv.pois, pois.aic = cv.pois.aic, pois.bic = cv.pois.bic)
 cv.sel
@@ -344,10 +346,10 @@ cv.sel
 ```
 ## 
 ## 10-fold CV results:
-##        Fit    CV
-## 1     pois 2.727
-## 2 pois.aic 2.693
-## 3 pois.bic 2.682
+##        Fit     CV
+## 1     pois 0.6311
+## 2 pois.aic 0.5973
+## 3 pois.bic 0.5903
 ## 
 ## Best model:
 ##         CV 
@@ -360,9 +362,9 @@ cv.sel$se
 
 ```
 ##        Fit       CV
-## 1     pois 0.005491
-## 2 pois.aic 0.006879
-## 3 pois.bic 0.003670
+## 1     pois 0.007458
+## 2 pois.aic 0.002929
+## 3 pois.bic 0.001327
 ```
 
 ```r
@@ -370,32 +372,51 @@ cv.sel$reps
 ```
 
 ```
-##         Fit    CV
-## 1      pois 2.719
-## 2      pois 2.733
-## 3      pois 2.726
-## 4      pois 2.730
-## 5      pois 2.727
-## 6  pois.aic 2.690
-## 7  pois.aic 2.704
-## 8  pois.aic 2.686
-## 9  pois.aic 2.693
-## 10 pois.aic 2.691
-## 11 pois.bic 2.677
-## 12 pois.bic 2.687
-## 13 pois.bic 2.681
-## 14 pois.bic 2.684
-## 15 pois.bic 2.680
+##         Fit     CV
+## 1      pois 0.6272
+## 2      pois 0.6260
+## 3      pois 0.6252
+## 4      pois 0.6342
+## 5      pois 0.6428
+## 6  pois.aic 0.5965
+## 7  pois.aic 0.5961
+## 8  pois.aic 0.5937
+## 9  pois.aic 0.5989
+## 10 pois.aic 0.6014
+## 11 pois.bic 0.5901
+## 12 pois.bic 0.5886
+## 13 pois.bic 0.5914
+## 14 pois.bic 0.5896
+## 15 pois.bic 0.5919
 ```
 
 ```r
 
 ## Evaluate with validation data set
-e.pois <- rmspe(validateC$votes.useful, predict(fit.pois, validateC), includeSE = TRUE)
-e.pois.aic <- rmspe(validateC$votes.useful, predict(fit.pois.aic, validateC), 
+e.pois <- rmlspe(validateC$votes.useful, predict(fit.pois, validateC, type = "response"), 
     includeSE = TRUE)
-e.pois.bic <- rmspe(validateC$votes.useful, predict(fit.pois.bic, validateC), 
-    includeSE = TRUE)
+hist(predict(fit.pois, validateC, type = "response"))
+```
+
+![plot of chunk models](figure/models1.png) 
+
+```r
+e.pois.aic <- rmlspe(validateC$votes.useful, predict(fit.pois.aic, validateC, 
+    type = "response"), includeSE = TRUE)
+hist(predict(fit.pois.aic, validateC, type = "response"))
+```
+
+![plot of chunk models](figure/models2.png) 
+
+```r
+e.pois.bic <- rmlspe(validateC$votes.useful, predict(fit.pois.bic, validateC, 
+    type = "response"), includeSE = TRUE)
+hist(predict(fit.pois.bic, validateC, type = "response"))
+```
+
+![plot of chunk models](figure/models3.png) 
+
+```r
 e.glm <- list(e.pois, e.pois.aic, e.pois.bic)
 
 unlist(lapply(e.glm, function(x) {
@@ -404,7 +425,7 @@ unlist(lapply(e.glm, function(x) {
 ```
 
 ```
-## [1] 2.466 2.467 2.453
+## [1] 0.6590 0.6617 0.6504
 ```
 
 ```r
@@ -414,7 +435,7 @@ unlist(lapply(e.glm, function(x) {
 ```
 
 ```
-## [1] 0.03894 0.03936 0.03921
+## [1] 0.03582 0.04130 0.03593
 ```
 
 ```r
@@ -432,7 +453,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-## 217.171   3.178 220.815
+##  177.08   12.71  190.09
 ```
 
 ```r
@@ -440,25 +461,20 @@ sessionInfo()
 ```
 
 ```
-## R version 3.0.0 Patched (2013-04-30 r62698)
-## Platform: x86_64-unknown-linux-gnu (64-bit)
+## R version 2.15.3 (2013-03-01)
+## Platform: x86_64-apple-darwin9.8.0/x86_64 (64-bit)
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.iso885915       LC_NUMERIC=C                  
-##  [3] LC_TIME=en_US.iso885915        LC_COLLATE=en_US.iso885915    
-##  [5] LC_MONETARY=en_US.iso885915    LC_MESSAGES=en_US.iso885915   
-##  [7] LC_PAPER=C                     LC_NAME=C                     
-##  [9] LC_ADDRESS=C                   LC_TELEPHONE=C                
-## [11] LC_MEASUREMENT=en_US.iso885915 LC_IDENTIFICATION=C           
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] cvTools_0.3.2    robustbase_0.9-7 lattice_0.20-15  knitr_1.2       
+## [1] cvTools_0.3.2    robustbase_0.9-7 lattice_0.20-15  knitr_1.1       
 ## 
 ## loaded via a namespace (and not attached):
-## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    grid_3.0.0    
-## [5] stringr_0.6.2  tools_3.0.0
+## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    grid_2.15.3   
+## [5] stringr_0.6.2  tools_2.15.3
 ```
 

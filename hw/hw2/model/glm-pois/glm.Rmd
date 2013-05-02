@@ -9,9 +9,12 @@ library(cvTools)
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- FALSE
+test <- TRUE
 if(test) {
 	trainC <- trainC[1:1000, ]
+}
+rmlspe <- function(y, yHat, includeSE = FALSE) {
+	rmspe(log(y + 1), log(yHat + 1), includeSE = includeSE)
 }
 ```
 
@@ -34,9 +37,9 @@ set.seed(seed)
 folds <- cvFolds(nrow(trainC), K=K, R=R)
 
 ## Run the cross-validation
-cv.pois <- cvFit(fit.pois, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
-cv.pois.aic <- cvFit(fit.pois.aic, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
-cv.pois.bic <- cvFit(fit.pois.bic, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+cv.pois <- cvFit(fit.pois, y=trainC$votes.useful, data=trainC, cost=rmlspe, costArgs=list(includeSE=TRUE), predictArgs=list(type="response"), folds=folds)
+cv.pois.aic <- cvFit(fit.pois.aic, y=trainC$votes.useful, data=trainC, cost=rmlspe, costArgs=list(includeSE=TRUE), predictArgs=list(type="response"), folds=folds)
+cv.pois.bic <- cvFit(fit.pois.bic, y=trainC$votes.useful, data=trainC, cost=rmlspe, costArgs=list(includeSE=TRUE), predictArgs=list(type="response"), folds=folds)
 
 cv.sel <- cvSelect("pois"=cv.pois, "pois.aic"=cv.pois.aic, "pois.bic"=cv.pois.bic)
 cv.sel
@@ -44,12 +47,12 @@ cv.sel$se
 cv.sel$reps
 
 ## Evaluate with validation data set
-e.pois <- rmspe(validateC$votes.useful, predict(fit.pois, validateC), includeSE=TRUE)
-hist(predict(fit.pois, validateC))
-e.pois.aic <- rmspe(validateC$votes.useful, predict(fit.pois.aic, validateC), includeSE=TRUE)
-hist(predict(fit.pois.aic, validateC))
-e.pois.bic <- rmspe(validateC$votes.useful, predict(fit.pois.bic, validateC), includeSE=TRUE)
-hist(predict(fit.pois.bic, validateC))
+e.pois <- rmlspe(validateC$votes.useful, predict(fit.pois, validateC, type="response"), includeSE=TRUE)
+hist(predict(fit.pois, validateC, type="response"))
+e.pois.aic <- rmlspe(validateC$votes.useful, predict(fit.pois.aic, validateC, type="response"), includeSE=TRUE)
+hist(predict(fit.pois.aic, validateC, type="response"))
+e.pois.bic <- rmlspe(validateC$votes.useful, predict(fit.pois.bic, validateC, type="response"), includeSE=TRUE)
+hist(predict(fit.pois.bic, validateC, type="response"))
 e.glm <- list(e.pois, e.pois.aic, e.pois.bic)
 
 unlist(lapply(e.glm, function(x) { x$rmspe}))
