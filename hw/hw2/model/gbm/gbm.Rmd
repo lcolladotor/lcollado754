@@ -10,7 +10,7 @@ library(cvTools)
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- FALSE
+test <- TRUE
 if(test) {
 	trainC <- trainC[1:1000, ]
 }
@@ -47,7 +47,7 @@ show(fit.gbm.pois)
 pred.pois <- predict(fit.gbm.pois, validateC, type="response")
 e.gbm.pois <- rmlspe(validateC$votes.useful, pred.pois, includeSE=TRUE)
 e.gbm.pois
-hist(pred.pois)
+summary(pred.pois)
 
 save(fit.gbm.pois, e.gbm.pois, file="gbm.Rdata")
 ```

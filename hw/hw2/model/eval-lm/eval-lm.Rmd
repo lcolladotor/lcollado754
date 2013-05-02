@@ -21,21 +21,21 @@ Look at the predictions after truncating them to be greater or equal to 0
 
 ```{r models}
 pred.lm <- predict(fit.lm, validateC)
-hist(pred.lm)
+summary(pred.lm)
 pred.lm[ pred.lm < 0] <- 0
-hist(pred.lm)
+summary(pred.lm)
 
 
 pred.lm.aic <- predict(fit.aic, validateC)
-hist(pred.lm.aic)
+summary(pred.lm.aic)
 pred.lm.aic[ pred.lm.aic < 0] <- 0
-hist(pred.lm.aic)
+summary(pred.lm.aic)
 
 
 pred.lm.bic <- predict(fit.bic, validateC)
-hist(pred.lm.bic)
+summary(pred.lm.bic)
 pred.lm.bic[ pred.lm.bic < 0] <- 0
-hist(pred.lm.bic)
+summary(pred.lm.bic)
 
 
 e.l.lm <- rmlspe(validateC$votes.useful, pred.lm, includeSE=TRUE)
