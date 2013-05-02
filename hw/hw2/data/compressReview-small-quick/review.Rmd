@@ -8,7 +8,7 @@ library(plyr)
 library(doMC)
 
 ## Set up for using plyr in parallel
-registerDoMC(4)
+registerDoMC(20)
 getDoParWorkers()
 
 ## Read data
@@ -115,7 +115,7 @@ processBusiness <- function(x, business.a, parallel) {
 processFun <- function(input, all, parallel=TRUE, small=FALSE) {
 	
 	## Test
-	if(TRUE){
+	if(FALSE){
 		input <- lapply(testProcessed, head, n=10)
 	}
 	
