@@ -48,11 +48,11 @@ cv.sel$reps
 
 ## Evaluate with validation data set
 e.pois <- rmlspe(validateC$votes.useful, predict(fit.pois, validateC, type="response"), includeSE=TRUE)
-hist(predict(fit.pois, validateC, type="response"))
+summary(predict(fit.pois, validateC, type="response"))
 e.pois.aic <- rmlspe(validateC$votes.useful, predict(fit.pois.aic, validateC, type="response"), includeSE=TRUE)
-hist(predict(fit.pois.aic, validateC, type="response"))
+summary(predict(fit.pois.aic, validateC, type="response"))
 e.pois.bic <- rmlspe(validateC$votes.useful, predict(fit.pois.bic, validateC, type="response"), includeSE=TRUE)
-hist(predict(fit.pois.bic, validateC, type="response"))
+summary(predict(fit.pois.bic, validateC, type="response"))
 e.glm <- list(e.pois, e.pois.aic, e.pois.bic)
 
 unlist(lapply(e.glm, function(x) { x$rmspe}))
