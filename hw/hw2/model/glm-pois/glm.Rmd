@@ -1,0 +1,63 @@
+glm-pois with cross-validation
+=======================
+
+Setup
+```{r setup}
+## Libs
+library(cvTools)
+
+## Data
+load("../lm/trainC.Rdata")
+
+test <- TRUE
+if(test) {
+	trainC <- trainC[1:1000, ]
+}
+```
+
+
+Fit 10-fold cross validation with 5 repetitions
+```{r models}
+## Fit poisson the models
+fit.pois <- glm(votes.useful ~., data=trainC, family=poisson)
+fit.pois.aic <- step(fit.pois, trace=0)
+fit.pois.bic <- step(fit.pois, trace=0, k=log(nrow(trainC)))
+summary(fit.pois)
+summary(fit.pois.aic)
+summary(fit.pois.bic)
+
+## Determine the folds
+seed <- 20130501
+K <- 10
+R <- 5
+set.seed(seed)
+folds <- cvFolds(nrow(trainC), K=K, R=R)
+
+## Run the cross-validation
+cv.pois <- cvFit(fit.pois, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+cv.pois.aic <- cvFit(fit.pois.aic, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+cv.pois.bic <- cvFit(fit.pois.bic, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+
+cv.sel <- cvSelect("pois"=cv.pois, "pois.aic"=cv.pois.aic, "pois.bic"=cv.pois.bic)
+cv.sel
+cv.sel$se
+cv.sel$reps
+
+## Evaluate with validation data set
+e.pois <- rmspe(validateC$votes.useful, predict(fit.pois, validateC), includeSE=TRUE)
+e.pois.aic <- rmspe(validateC$votes.useful, predict(fit.pois.aic, validateC), includeSE=TRUE)
+e.pois.bic <- rmspe(validateC$votes.useful, predict(fit.pois.bic, validateC), includeSE=TRUE)
+e.glm <- list(e.pois, e.pois.aic, e.pois.bic)
+
+unlist(lapply(e.glm, function(x) { x$rmspe}))
+unlist(lapply(e.glm, function(x) { x$se}))
+
+rm(validateC, trainC, test, seed, K, R)
+save.image(file="glm-pois.Rdata")
+```
+
+Reproducibility
+```{r reproduc}
+print(proc.time())
+sessionInfo()
+```

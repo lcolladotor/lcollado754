@@ -9,9 +9,12 @@ library(cvTools)
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- FALSE
+test <- TRUE
 if(test) {
-	trainC <- trainC[1:1000, ]
+	trainC <- trainC[1:100, ]
+}
+rmlspe <- function(y, yHat, includeSE = FALSE) {
+	rmspe(log(y + 1), log(yHat + 1), includeSE = includeSE)
 }
 ```
 

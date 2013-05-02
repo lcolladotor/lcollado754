@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>glm with cross-validation</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+</head>
+
+<body>
+<h1>glm with cross-validation</h1>
+
+<p>Setup</p>
+
+<pre><code class="r">## Libs
+library(cvTools)
+</code></pre>
+
+<pre><code>## Loading required package: lattice
+</code></pre>
+
+<pre><code>## Loading required package: robustbase
+</code></pre>
+
+<pre><code class="r">
+## Data
+load(&quot;../lm/trainC.Rdata&quot;)
+
+test &lt;- TRUE
+if (test) {
+    trainC &lt;- trainC[1:1000, ]
+}
+</code></pre>
+
+<p>Fit 10-fold cross validation with 5 repetitions</p>
+
+<pre><code class="r">## Fit poisson the models
+fit.pois &lt;- glm(votes.useful ~ ., data = trainC, family = poisson)
+fit.pois.aic &lt;- step(fit.pois, trace = 0)
+fit.pois.bic &lt;- step(fit.pois, trace = 0, k = log(nrow(trainC)))
+summary(fit.pois)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## glm(formula = votes.useful ~ ., family = poisson, data = trainC)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+##  -3.72   -1.23   -0.40    0.48    7.27  
+## 
+## Coefficients:
+##                                      Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)                          6.52e+01   4.64e+01    1.41  0.16001
+## stars                               -3.97e-02   3.00e-02   -1.32  0.18563
+## date                                -4.99e-04   5.08e-05   -9.82  &lt; 2e-16
+## `word. `                             5.14e-03   1.60e-03    3.21  0.00134
+## word..                               3.06e-03   4.75e-03    0.64  0.51902
+## word.the                            -5.53e-02   9.86e-03   -5.61  2.0e-08
+## `word.,`                            -1.11e-02   6.84e-03   -1.63  0.10330
+## word.and                             6.77e-03   1.13e-02    0.60  0.55099
+## word.I                              -5.36e-03   1.02e-02   -0.53  0.59868
+## word.a                              -1.55e-02   1.21e-02   -1.28  0.20046
+## `word.\\n`                           2.20e-02   6.04e-03    3.64  0.00027
+## word.to                             -9.39e-03   1.39e-02   -0.68  0.49780
+## word.of                              2.90e-02   1.50e-02    1.93  0.05403
+## word.was                            -9.58e-03   1.62e-02   -0.59  0.55416
+## word.is                             -1.64e-02   1.93e-02   -0.85  0.39503
+## word.for                             2.70e-02   2.08e-02    1.30  0.19469
+## word.it                             -4.08e-02   1.84e-02   -2.22  0.02618
+## word.in                              5.83e-03   1.97e-02    0.30  0.76778
+## `word.!`                             9.00e-03   9.35e-03    0.96  0.33554
+## word.The                            -3.11e-02   2.11e-02   -1.47  0.14054
+## word.that                            3.20e-03   2.30e-02    0.14  0.88930
+## word.with                           -2.79e-02   2.32e-02   -1.20  0.22923
+## word.but                            -1.52e-02   2.54e-02   -0.60  0.55036
+## word.you                            -2.38e-02   1.81e-02   -1.31  0.18870
+## word.my                              1.17e-02   2.45e-02    0.48  0.63297
+## word.on                              1.74e-02   2.47e-02    0.70  0.48134
+## word.have                            6.76e-02   2.29e-02    2.95  0.00314
+## word.this                           -2.68e-02   2.63e-02   -1.02  0.30756
+## word.had                             2.94e-02   2.84e-02    1.03  0.30151
+## word.are                             5.56e-02   2.97e-02    1.87  0.06165
+## word.they                           -5.69e-02   2.51e-02   -2.27  0.02305
+## word.not                            -4.69e-02   3.12e-02   -1.50  0.13280
+## `word.)`                            -7.56e-03   8.29e-02   -0.09  0.92736
+## word.place                          -5.35e-02   3.07e-02   -1.74  0.08134
+## word.at                              1.11e-01   2.95e-02    3.78  0.00016
+## word.good                           -5.49e-02   3.16e-02   -1.74  0.08263
+## word.were                            3.98e-02   3.01e-02    1.32  0.18636
+## `word.(`                            -1.45e-02   8.77e-02   -0.17  0.86894
+## word.food                            3.38e-02   3.57e-02    0.95  0.34365
+## `word.&quot;`                             5.09e-02   1.35e-02    3.78  0.00015
+## word.we                             -1.27e-01   2.03e-02   -6.27  3.6e-10
+## word.so                             -3.37e-02   3.09e-02   -1.09  0.27571
+## `word.-`                            -2.20e-02   1.73e-02   -1.27  0.20500
+## word.be                              1.11e-01   3.42e-02    3.25  0.00114
+## word.as                             -9.68e-02   3.10e-02   -3.12  0.00180
+## word.like                           -6.24e-02   3.79e-02   -1.64  0.10000
+## word.me                              7.99e-02   2.96e-02    2.70  0.00701
+## word.out                             7.41e-02   3.20e-02    2.31  0.02071
+## word.there                          -7.95e-02   3.58e-02   -2.22  0.02659
+## word.here                           -7.10e-03   3.67e-02   -0.19  0.84675
+## word.just                            1.88e-02   3.66e-02    0.51  0.60735
+## word.great                          -1.08e-03   3.97e-02   -0.03  0.97829
+## word.all                             8.22e-03   3.72e-02    0.22  0.82493
+## user.average_stars                   1.87e-01   6.34e-02    2.94  0.00324
+## user.review_count                    1.17e-03   8.87e-05   13.18  &lt; 2e-16
+## business.categories.BeautySpasTRUE  -3.26e-01   2.18e-01   -1.49  0.13607
+## business.categories.FoodTRUE        -5.77e-02   8.62e-02   -0.67  0.50323
+## business.categories.RestaurantsTRUE -1.35e-02   8.41e-02   -0.16  0.87277
+## business.categories.ShoppingTRUE    -2.85e-01   1.51e-01   -1.89  0.05941
+## business.categories.total            5.93e-02   2.33e-02    2.55  0.01076
+## business.latitude                   -4.28e-02   3.15e-01   -0.14  0.89204
+## business.longitude                  -2.24e-01   2.99e-01   -0.75  0.45326
+## business.openTRUE                    3.61e-02   1.11e-01    0.33  0.74474
+## business.review_count                3.62e-04   2.21e-04    1.64  0.10120
+## business.stars                       1.95e-01   6.45e-02    3.03  0.00248
+## business.zipcode                    -9.78e-04   2.67e-04   -3.67  0.00024
+## checkin.total                        2.74e-06   1.67e-05    0.16  0.86961
+##                                        
+## (Intercept)                            
+## stars                                  
+## date                                ***
+## `word. `                            ** 
+## word..                                 
+## word.the                            ***
+## `word.,`                               
+## word.and                               
+## word.I                                 
+## word.a                                 
+## `word.\\n`                          ***
+## word.to                                
+## word.of                             .  
+## word.was                               
+## word.is                                
+## word.for                               
+## word.it                             *  
+## word.in                                
+## `word.!`                               
+## word.The                               
+## word.that                              
+## word.with                              
+## word.but                               
+## word.you                               
+## word.my                                
+## word.on                                
+## word.have                           ** 
+## word.this                              
+## word.had                               
+## word.are                            .  
+## word.they                           *  
+## word.not                               
+## `word.)`                               
+## word.place                          .  
+## word.at                             ***
+## word.good                           .  
+## word.were                              
+## `word.(`                               
+## word.food                              
+## `word.&quot;`                            ***
+## word.we                             ***
+## word.so                                
+## `word.-`                               
+## word.be                             ** 
+## word.as                             ** 
+## word.like                           .  
+## word.me                             ** 
+## word.out                            *  
+## word.there                          *  
+## word.here                              
+## word.just                              
+## word.great                             
+## word.all                               
+## user.average_stars                  ** 
+## user.review_count                   ***
+## business.categories.BeautySpasTRUE     
+## business.categories.FoodTRUE           
+## business.categories.RestaurantsTRUE    
+## business.categories.ShoppingTRUE    .  
+## business.categories.total           *  
+## business.latitude                      
+## business.longitude                     
+## business.openTRUE                      
+## business.review_count                  
+## business.stars                      ** 
+## business.zipcode                    ***
+## checkin.total                          
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1 
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 2751.5  on 999  degrees of freedom
+## Residual deviance: 1658.1  on 933  degrees of freedom
+## AIC: 3331
+## 
+## Number of Fisher Scoring iterations: 6
+</code></pre>
+
+<pre><code class="r">summary(fit.pois.aic)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## glm(formula = votes.useful ~ date + `word. ` + word.the + `word.,` + 
+##     word.a + `word.\n` + word.of + word.for + word.it + word.The + 
+##     word.you + word.have + word.are + word.they + word.not + 
+##     word.place + word.at + word.were + `word.&quot;` + word.we + `word.-` + 
+##     word.be + word.as + word.like + word.me + word.out + word.there + 
+##     user.average_stars + user.review_count + business.categories.Shopping + 
+##     business.categories.total + business.review_count + business.stars + 
+##     business.zipcode, family = poisson, data = trainC)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+## -3.806  -1.226  -0.441   0.427   7.544  
+## 
+## Coefficients:
+##                                   Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                       9.55e+01   1.95e+01    4.90  9.8e-07 ***
+## date                             -5.05e-04   4.83e-05  -10.46  &lt; 2e-16 ***
+## `word. `                          4.39e-03   9.55e-04    4.60  4.3e-06 ***
+## word.the                         -4.74e-02   9.11e-03   -5.20  2.0e-07 ***
+## `word.,`                         -1.51e-02   6.05e-03   -2.50  0.01241 *  
+## word.a                           -2.05e-02   1.03e-02   -2.00  0.04575 *  
+## `word.\\n`                        2.34e-02   5.05e-03    4.63  3.7e-06 ***
+## word.of                           3.43e-02   1.42e-02    2.42  0.01548 *  
+## word.for                          3.90e-02   1.89e-02    2.07  0.03891 *  
+## word.it                          -4.18e-02   1.61e-02   -2.60  0.00930 ** 
+## word.The                         -2.89e-02   1.82e-02   -1.58  0.11303    
+## word.you                         -2.72e-02   1.53e-02   -1.78  0.07569 .  
+## word.have                         5.59e-02   2.03e-02    2.76  0.00575 ** 
+## word.are                          4.76e-02   2.66e-02    1.79  0.07392 .  
+## word.they                        -3.57e-02   2.18e-02   -1.64  0.10143    
+## word.not                         -4.88e-02   2.88e-02   -1.69  0.09080 .  
+## word.place                       -6.77e-02   2.61e-02   -2.60  0.00944 ** 
+## word.at                           1.10e-01   2.67e-02    4.11  4.0e-05 ***
+## word.were                         4.20e-02   2.57e-02    1.64  0.10164    
+## `word.&quot;`                          5.42e-02   1.14e-02    4.74  2.2e-06 ***
+## word.we                          -1.10e-01   1.73e-02   -6.36  2.1e-10 ***
+## `word.-`                         -2.91e-02   1.62e-02   -1.79  0.07365 .  
+## word.be                           1.13e-01   3.19e-02    3.53  0.00042 ***
+## word.as                          -9.56e-02   2.78e-02   -3.44  0.00059 ***
+## word.like                        -4.87e-02   3.37e-02   -1.45  0.14784    
+## word.me                           7.04e-02   2.36e-02    2.98  0.00287 ** 
+## word.out                          6.99e-02   2.99e-02    2.34  0.01950 *  
+## word.there                       -8.44e-02   3.30e-02   -2.56  0.01052 *  
+## user.average_stars                1.65e-01   5.84e-02    2.82  0.00476 ** 
+## user.review_count                 1.19e-03   7.92e-05   15.00  &lt; 2e-16 ***
+## business.categories.ShoppingTRUE -2.56e-01   1.38e-01   -1.86  0.06254 .  
+## business.categories.total         4.82e-02   2.15e-02    2.24  0.02513 *  
+## business.review_count             4.21e-04   1.67e-04    2.53  0.01157 *  
+## business.stars                    1.53e-01   5.38e-02    2.84  0.00449 ** 
+## business.zipcode                 -1.05e-03   2.29e-04   -4.59  4.4e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1 
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 2751.5  on 999  degrees of freedom
+## Residual deviance: 1676.9  on 965  degrees of freedom
+## AIC: 3286
+## 
+## Number of Fisher Scoring iterations: 5
+</code></pre>
+
+<pre><code class="r">summary(fit.pois.bic)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## glm(formula = votes.useful ~ date + `word. ` + word.the + `word.\n` + 
+##     word.of + word.have + word.place + word.at + `word.&quot;` + word.we + 
+##     word.be + word.as + word.me + user.average_stars + user.review_count + 
+##     business.review_count + business.stars + business.zipcode, 
+##     family = poisson, data = trainC)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+## -3.596  -1.251  -0.420   0.443   7.404  
+## 
+## Coefficients:
+##                        Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)            8.88e+01   1.90e+01    4.67  3.0e-06 ***
+## date                  -4.84e-04   4.74e-05  -10.21  &lt; 2e-16 ***
+## `word. `               1.89e-03   5.88e-04    3.22  0.00129 ** 
+## word.the              -3.91e-02   8.37e-03   -4.67  3.0e-06 ***
+## `word.\\n`             2.03e-02   4.62e-03    4.39  1.1e-05 ***
+## word.of                4.11e-02   1.37e-02    3.00  0.00270 ** 
+## word.have              7.46e-02   1.89e-02    3.95  7.7e-05 ***
+## word.place            -7.21e-02   2.45e-02   -2.94  0.00327 ** 
+## word.at                1.03e-01   2.59e-02    3.97  7.1e-05 ***
+## `word.&quot;`               4.93e-02   1.06e-02    4.63  3.6e-06 ***
+## word.we               -8.59e-02   1.54e-02   -5.58  2.4e-08 ***
+## word.be                1.05e-01   2.93e-02    3.59  0.00033 ***
+## word.as               -1.09e-01   2.71e-02   -4.03  5.6e-05 ***
+## word.me                7.02e-02   2.04e-02    3.44  0.00057 ***
+## user.average_stars     1.67e-01   5.79e-02    2.87  0.00404 ** 
+## user.review_count      1.19e-03   7.47e-05   15.90  &lt; 2e-16 ***
+## business.review_count  5.50e-04   1.58e-04    3.47  0.00051 ***
+## business.stars         1.85e-01   5.30e-02    3.49  0.00049 ***
+## business.zipcode      -9.77e-04   2.23e-04   -4.38  1.2e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1 
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 2751.5  on 999  degrees of freedom
+## Residual deviance: 1732.0  on 981  degrees of freedom
+## AIC: 3309
+## 
+## Number of Fisher Scoring iterations: 5
+</code></pre>
+
+<pre><code class="r">
+## Determine the folds
+seed &lt;- 20130501
+K &lt;- 10
+R &lt;- 5
+set.seed(seed)
+folds &lt;- cvFolds(nrow(trainC), K = K, R = R)
+
+## Run the cross-validation
+cv.pois &lt;- cvFit(fit.pois, y = trainC$votes.useful, data = trainC, cost = rmspe, 
+    costArgs = list(includeSE = TRUE), folds = folds)
+cv.pois.aic &lt;- cvFit(fit.pois.aic, y = trainC$votes.useful, data = trainC, cost = rmspe, 
+    costArgs = list(includeSE = TRUE), folds = folds)
+cv.pois.bic &lt;- cvFit(fit.pois.bic, y = trainC$votes.useful, data = trainC, cost = rmspe, 
+    costArgs = list(includeSE = TRUE), folds = folds)
+
+cv.sel &lt;- cvSelect(pois = cv.pois, pois.aic = cv.pois.aic, pois.bic = cv.pois.bic)
+cv.sel
+</code></pre>
+
+<pre><code>## 
+## 10-fold CV results:
+##        Fit    CV
+## 1     pois 2.727
+## 2 pois.aic 2.693
+## 3 pois.bic 2.682
+## 
+## Best model:
+##         CV 
+## &quot;pois.bic&quot;
+</code></pre>
+
+<pre><code class="r">cv.sel$se
+</code></pre>
+
+<pre><code>##        Fit       CV
+## 1     pois 0.005491
+## 2 pois.aic 0.006879
+## 3 pois.bic 0.003670
+</code></pre>
+
+<pre><code class="r">cv.sel$reps
+</code></pre>
+
+<pre><code>##         Fit    CV
+## 1      pois 2.719
+## 2      pois 2.733
+## 3      pois 2.726
+## 4      pois 2.730
+## 5      pois 2.727
+## 6  pois.aic 2.690
+## 7  pois.aic 2.704
+## 8  pois.aic 2.686
+## 9  pois.aic 2.693
+## 10 pois.aic 2.691
+## 11 pois.bic 2.677
+## 12 pois.bic 2.687
+## 13 pois.bic 2.681
+## 14 pois.bic 2.684
+## 15 pois.bic 2.680
+</code></pre>
+
+<pre><code class="r">
+## Evaluate with validation data set
+e.pois &lt;- rmspe(validateC$votes.useful, predict(fit.pois, validateC), includeSE = TRUE)
+e.pois.aic &lt;- rmspe(validateC$votes.useful, predict(fit.pois.aic, validateC), 
+    includeSE = TRUE)
+e.pois.bic &lt;- rmspe(validateC$votes.useful, predict(fit.pois.bic, validateC), 
+    includeSE = TRUE)
+e.glm &lt;- list(e.pois, e.pois.aic, e.pois.bic)
+
+unlist(lapply(e.glm, function(x) {
+    x$rmspe
+}))
+</code></pre>
+
+<pre><code>## [1] 2.466 2.467 2.453
+</code></pre>
+
+<pre><code class="r">unlist(lapply(e.glm, function(x) {
+    x$se
+}))
+</code></pre>
+
+<pre><code>## [1] 0.03894 0.03936 0.03921
+</code></pre>
+
+<pre><code class="r">
+rm(validateC, trainC, test, seed, K, R)
+save.image(file = &quot;glm-bin.Rdata&quot;)
+</code></pre>
+
+<p>Reproducibility</p>
+
+<pre><code class="r">print(proc.time())
+</code></pre>
+
+<pre><code>##    user  system elapsed 
+##  174.46   11.97  186.67
+</code></pre>
+
+<pre><code class="r">sessionInfo()
+</code></pre>
+
+<pre><code>## R version 2.15.3 (2013-03-01)
+## Platform: x86_64-apple-darwin9.8.0/x86_64 (64-bit)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] cvTools_0.3.2    robustbase_0.9-7 lattice_0.20-15  knitr_1.1       
+## 
+## loaded via a namespace (and not attached):
+## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    grid_2.15.3   
+## [5] stringr_0.6.2  tools_2.15.3
+</code></pre>
+
+</body>
+
+</html>
