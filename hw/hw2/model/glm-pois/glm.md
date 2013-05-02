@@ -1,4 +1,4 @@
-glm with cross-validation
+glm-pois with cross-validation
 =======================
 
 Setup
@@ -14,6 +14,10 @@ library(cvTools)
 
 ```
 ## Loading required package: robustbase
+```
+
+```
+## Loading required package: methods
 ```
 
 ```r
@@ -186,7 +190,7 @@ summary(fit.pois)
 ## business.zipcode                    ***
 ## checkin.total                          
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
@@ -255,7 +259,7 @@ summary(fit.pois.aic)
 ## business.stars                    1.53e-01   5.38e-02    2.84  0.00449 ** 
 ## business.zipcode                 -1.05e-03   2.29e-04   -4.59  4.4e-06 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
@@ -305,7 +309,7 @@ summary(fit.pois.bic)
 ## business.stars         1.85e-01   5.30e-02    3.49  0.00049 ***
 ## business.zipcode      -9.77e-04   2.23e-04   -4.38  1.2e-05 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for poisson family taken to be 1)
 ## 
@@ -416,7 +420,7 @@ unlist(lapply(e.glm, function(x) {
 ```r
 
 rm(validateC, trainC, test, seed, K, R)
-save.image(file = "glm-bin.Rdata")
+save.image(file = "glm-pois.Rdata")
 ```
 
 
@@ -428,7 +432,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##  174.46   11.97  186.67
+## 217.171   3.178 220.815
 ```
 
 ```r
@@ -436,20 +440,25 @@ sessionInfo()
 ```
 
 ```
-## R version 2.15.3 (2013-03-01)
-## Platform: x86_64-apple-darwin9.8.0/x86_64 (64-bit)
+## R version 3.0.0 Patched (2013-04-30 r62698)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+##  [1] LC_CTYPE=en_US.iso885915       LC_NUMERIC=C                  
+##  [3] LC_TIME=en_US.iso885915        LC_COLLATE=en_US.iso885915    
+##  [5] LC_MONETARY=en_US.iso885915    LC_MESSAGES=en_US.iso885915   
+##  [7] LC_PAPER=C                     LC_NAME=C                     
+##  [9] LC_ADDRESS=C                   LC_TELEPHONE=C                
+## [11] LC_MEASUREMENT=en_US.iso885915 LC_IDENTIFICATION=C           
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
-## [1] cvTools_0.3.2    robustbase_0.9-7 lattice_0.20-15  knitr_1.1       
+## [1] cvTools_0.3.2    robustbase_0.9-7 lattice_0.20-15  knitr_1.2       
 ## 
 ## loaded via a namespace (and not attached):
-## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    grid_2.15.3   
-## [5] stringr_0.6.2  tools_2.15.3
+## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    grid_3.0.0    
+## [5] stringr_0.6.2  tools_3.0.0
 ```
 
