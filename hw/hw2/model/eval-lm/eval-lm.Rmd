@@ -21,21 +21,21 @@ Look at the predictions after truncating them to be greater or equal to 0
 
 ```{r models}
 pred.lm <- predict(fit.lm, validateC)
-hist(pred.lm)
+summary(pred.lm)
 pred.lm[ pred.lm < 0] <- 0
-hist(pred.lm)
+summary(pred.lm)
 
 
 pred.lm.aic <- predict(fit.lm.aic, validateC)
-hist(pred.lm.bic)
+summary(pred.lm.bic)
 pred.lm.aic[ pred.lm.aic < 0] <- 0
-hist(pred.lm.bic)
+summary(pred.lm.bic)
 
 
 pred.lm.bic <- predict(fit.lm.bic, validateC)
-hist(pred.lm.bic)
+summary(pred.lm.bic)
 pred.lm.bic[ pred.lm.bic < 0] <- 0
-hist(pred.lm.bic)
+summary(pred.lm.bic)
 
 
 e.l.lm <- rmlspe(validateC$votes.useful, pred.lm, includeSE=TRUE)
@@ -46,7 +46,7 @@ e.eval.lm <- list(e.l.lm, e.l.aic, e.l.bic)
 unlist(lapply(e.eval.lm, function(x) { x$rmspe}))
 unlist(lapply(e.eval.lm, function(x) { x$se}))
 
-save.image(e.eval.lm, file="eval-lm.Rdata")
+save(e.eval.lm, file="eval-lm.Rdata")
 ```
 
 Reproducibility
