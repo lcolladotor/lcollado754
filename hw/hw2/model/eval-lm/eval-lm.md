@@ -60,14 +60,7 @@ summary(pred.lm)
 ```r
 
 
-pred.lm.aic <- predict(fit.lm.aic, validateC)
-```
-
-```
-## Error: object 'fit.lm.aic' not found
-```
-
-```r
+pred.lm.aic <- predict(fit.aic, validateC)
 summary(pred.lm.bic)
 ```
 
@@ -77,13 +70,6 @@ summary(pred.lm.bic)
 
 ```r
 pred.lm.aic[pred.lm.aic < 0] <- 0
-```
-
-```
-## Error: object 'pred.lm.aic' not found
-```
-
-```r
 summary(pred.lm.bic)
 ```
 
@@ -94,35 +80,23 @@ summary(pred.lm.bic)
 ```r
 
 
-pred.lm.bic <- predict(fit.lm.bic, validateC)
-```
-
-```
-## Error: object 'fit.lm.bic' not found
-```
-
-```r
+pred.lm.bic <- predict(fit.bic, validateC)
 summary(pred.lm.bic)
 ```
 
 ```
-## Error: object 'pred.lm.bic' not found
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -0.815   0.627   1.130   1.390   1.880  14.200
 ```
 
 ```r
 pred.lm.bic[pred.lm.bic < 0] <- 0
-```
-
-```
-## Error: object 'pred.lm.bic' not found
-```
-
-```r
 summary(pred.lm.bic)
 ```
 
 ```
-## Error: object 'pred.lm.bic' not found
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.627   1.130   1.390   1.880  14.200
 ```
 
 ```r
@@ -130,37 +104,16 @@ summary(pred.lm.bic)
 
 e.l.lm <- rmlspe(validateC$votes.useful, pred.lm, includeSE = TRUE)
 e.l.aic <- rmlspe(validateC$votes.useful, pred.lm.aic, includeSE = TRUE)
-```
-
-```
-## Error: object 'pred.lm.aic' not found
-```
-
-```r
 e.l.bic <- rmlspe(validateC$votes.useful, pred.lm.bic, includeSE = TRUE)
-```
-
-```
-## Error: object 'pred.lm.bic' not found
-```
-
-```r
 
 e.eval.lm <- list(e.l.lm, e.l.aic, e.l.bic)
-```
-
-```
-## Error: object 'e.l.aic' not found
-```
-
-```r
 unlist(lapply(e.eval.lm, function(x) {
     x$rmspe
 }))
 ```
 
 ```
-## Error: object 'e.eval.lm' not found
+## [1] 0.5907 0.5907 0.5908
 ```
 
 ```r
@@ -170,16 +123,12 @@ unlist(lapply(e.eval.lm, function(x) {
 ```
 
 ```
-## Error: object 'e.eval.lm' not found
+## [1] 0.001635 0.001635 0.001635
 ```
 
 ```r
 
 save(e.eval.lm, file = "eval-lm.Rdata")
-```
-
-```
-## Error: object 'e.eval.lm' not found
 ```
 
 
@@ -191,7 +140,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##   6.419   1.116   7.596
+##   7.057   1.555   8.669
 ```
 
 ```r

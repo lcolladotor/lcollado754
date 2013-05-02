@@ -227,25 +227,15 @@ summary(pred.lm)
 
 <pre><code class="r">
 
-pred.lm.aic &lt;- predict(fit.lm.aic, validateC)
-</code></pre>
-
-<pre><code>## Error: object &#39;fit.lm.aic&#39; not found
-</code></pre>
-
-<pre><code class="r">summary(pred.lm.bic)
+pred.lm.aic &lt;- predict(fit.aic, validateC)
+summary(pred.lm.bic)
 </code></pre>
 
 <pre><code>## Error: object &#39;pred.lm.bic&#39; not found
 </code></pre>
 
 <pre><code class="r">pred.lm.aic[pred.lm.aic &lt; 0] &lt;- 0
-</code></pre>
-
-<pre><code>## Error: object &#39;pred.lm.aic&#39; not found
-</code></pre>
-
-<pre><code class="r">summary(pred.lm.bic)
+summary(pred.lm.bic)
 </code></pre>
 
 <pre><code>## Error: object &#39;pred.lm.bic&#39; not found
@@ -253,58 +243,35 @@ pred.lm.aic &lt;- predict(fit.lm.aic, validateC)
 
 <pre><code class="r">
 
-pred.lm.bic &lt;- predict(fit.lm.bic, validateC)
+pred.lm.bic &lt;- predict(fit.bic, validateC)
+summary(pred.lm.bic)
 </code></pre>
 
-<pre><code>## Error: object &#39;fit.lm.bic&#39; not found
-</code></pre>
-
-<pre><code class="r">summary(pred.lm.bic)
-</code></pre>
-
-<pre><code>## Error: object &#39;pred.lm.bic&#39; not found
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -0.815   0.627   1.130   1.390   1.880  14.200
 </code></pre>
 
 <pre><code class="r">pred.lm.bic[pred.lm.bic &lt; 0] &lt;- 0
+summary(pred.lm.bic)
 </code></pre>
 
-<pre><code>## Error: object &#39;pred.lm.bic&#39; not found
-</code></pre>
-
-<pre><code class="r">summary(pred.lm.bic)
-</code></pre>
-
-<pre><code>## Error: object &#39;pred.lm.bic&#39; not found
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.627   1.130   1.390   1.880  14.200
 </code></pre>
 
 <pre><code class="r">
 
 e.l.lm &lt;- rmlspe(validateC$votes.useful, pred.lm, includeSE = TRUE)
 e.l.aic &lt;- rmlspe(validateC$votes.useful, pred.lm.aic, includeSE = TRUE)
-</code></pre>
+e.l.bic &lt;- rmlspe(validateC$votes.useful, pred.lm.bic, includeSE = TRUE)
 
-<pre><code>## Error: object &#39;pred.lm.aic&#39; not found
-</code></pre>
-
-<pre><code class="r">e.l.bic &lt;- rmlspe(validateC$votes.useful, pred.lm.bic, includeSE = TRUE)
-</code></pre>
-
-<pre><code>## Error: object &#39;pred.lm.bic&#39; not found
-</code></pre>
-
-<pre><code class="r">
 e.eval.lm &lt;- list(e.l.lm, e.l.aic, e.l.bic)
-</code></pre>
-
-<pre><code>## Error: object &#39;e.l.aic&#39; not found
-</code></pre>
-
-<pre><code class="r">unlist(lapply(e.eval.lm, function(x) {
+unlist(lapply(e.eval.lm, function(x) {
     x$rmspe
 }))
 </code></pre>
 
-<pre><code>## Error: object &#39;e.eval.lm&#39; not found
+<pre><code>## [1] 0.5907 0.5907 0.5908
 </code></pre>
 
 <pre><code class="r">unlist(lapply(e.eval.lm, function(x) {
@@ -312,14 +279,11 @@ e.eval.lm &lt;- list(e.l.lm, e.l.aic, e.l.bic)
 }))
 </code></pre>
 
-<pre><code>## Error: object &#39;e.eval.lm&#39; not found
+<pre><code>## [1] 0.001635 0.001635 0.001635
 </code></pre>
 
 <pre><code class="r">
 save(e.eval.lm, file = &quot;eval-lm.Rdata&quot;)
-</code></pre>
-
-<pre><code>## Error: object &#39;e.eval.lm&#39; not found
 </code></pre>
 
 <p>Reproducibility</p>
@@ -328,7 +292,7 @@ save(e.eval.lm, file = &quot;eval-lm.Rdata&quot;)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   6.419   1.116   7.596
+##   7.057   1.555   8.669
 </code></pre>
 
 <pre><code class="r">sessionInfo()
