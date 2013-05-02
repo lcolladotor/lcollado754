@@ -1,0 +1,56 @@
+lm with cross-validation
+=======================
+
+Setup
+```{r setup}
+## Libs
+library(cvTools)
+
+## Data
+load("../lm/lm.Rdata")
+load("../lm/trainC.Rdata")
+
+## Yelp's function to evaluate the error
+rmlspe <- function(y, yHat, includeSE = FALSE) {
+	rmspe(log(y + 1), log(yHat + 1), includeSE = includeSE)
+}
+```
+
+
+Look at the predictions after truncating them to be greater or equal to 0
+
+```{r models}
+pred.lm <- predict(fit.lm, validateC)
+hist(pred.lm)
+pred.lm[ pred.lm < 0] <- 0
+hist(pred.lm)
+
+
+pred.lm.aic <- predict(fit.lm.aic, validateC)
+hist(pred.lm.bic)
+pred.lm.aic[ pred.lm.aic < 0] <- 0
+hist(pred.lm.bic)
+
+
+pred.lm.bic <- predict(fit.lm.bic, validateC)
+hist(pred.lm.bic)
+pred.lm.bic[ pred.lm.bic < 0] <- 0
+hist(pred.lm.bic)
+
+
+e.l.lm <- rmlspe(validateC$votes.useful, pred.lm, includeSE=TRUE)
+e.l.aic <- rmlspe(validateC$votes.useful, pred.lm.aic, includeSE=TRUE)
+e.l.bic <- rmlspe(validateC$votes.useful, pred.lm.bic, includeSE=TRUE)
+
+e.eval.lm <- list(e.l.lm, e.l.aic, e.l.bic)
+unlist(lapply(e.eval.lm, function(x) { x$rmspe}))
+unlist(lapply(e.eval.lm, function(x) { x$se}))
+
+save.image(e.eval.lm, file="eval-lm.Rdata")
+```
+
+Reproducibility
+```{r reproduc}
+print(proc.time())
+sessionInfo()
+```
