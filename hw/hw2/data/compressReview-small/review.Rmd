@@ -1,0 +1,189 @@
+Process the data by review to then use for model selection and prediction
+========================
+
+Load and explore the data
+```{r setup}
+## Libraries
+library(plyr)
+library(doMC)
+
+## Set up for using plyr in parallel
+registerDoMC(4)
+getDoParWorkers()
+
+## Read data
+load("../processReview/testProcessed.Rdata")
+load("../processReview/trainingProcessed.Rdata")
+
+## Explore it
+#lapply(testProcessed, head)
+lapply(testProcessed, summary)
+
+#lapply(trainingProcessed, head)
+lapply(trainingProcessed, summary)
+```
+
+Merge the data just to be able to then process the data properly. I mean, some businesses' might not be defined in the test data and you have to find them in the training data. At least, I think that's what some were discussing in the forums.
+
+```{r merge}
+types <- names(trainingProcessed)
+names(types) <- types
+all <- lapply(types, function(x) {
+	## For lazy code
+	y <- trainingProcessed[[x]]
+	z <- testProcessed[[x]]
+	
+	## Find if the columns match
+	toadd <- colnames(y)[!colnames(y) %in% colnames(z)]
+	new <- z
+	
+	## Add empty columns if necessary (aka, for the votes columns not present in the test data)
+	if(length(toadd) > 0) {
+		empty <- data.frame(matrix(NA, ncol=length(toadd), nrow=nrow(z)))
+		colnames(empty) <- toadd
+		new <- cbind(z, empty)
+	}
+	
+	## Reorder the columns so the rbind makes sense
+	idx <- sapply(colnames(y), function(m) { which(colnames(new) == m) })
+	new <- new[, idx]
+	
+	## Finish
+	rbind(y, new)
+})
+
+## Check that it makes sense
+identical(unlist(lapply(all, nrow)), unlist(lapply(types, function(x) { nrow(testProcessed[[x]]) + nrow(trainingProcessed[[x]])})))
+```
+
+Define the function that will process the information for the reviews. The goal is to pull the information from the other tables (business, checkin, user) into a big review table. Then this table can be the input for the modelling functions in R.
+
+```{r processFun}
+## Helper functions for ldply
+processUser <- function(x, user.a) {
+	i <- which(user.a$user_id == x)
+	which.cols <- colnames(user.a) %in% c("name", "average_stars", "review_count")
+	if(length(i) >= 1) {
+		res <- user.a[i, which.cols]
+	} else {
+		res <- user.a[i, which.cols]
+		res[1, ] <- rep(NA, length(which.cols))
+	} 
+	if(length(i) > 1) {
+		warning("Unexpected case. Only using the info from the first match.")
+		print(user.a[i, which.cols])
+	}
+	## Avoid variable names overlap with columns from other tables
+	colnames(res) <- paste0("user.", colnames(res))
+	return(res)
+}
+
+processCheckin <- function(x, checkin.a, small) {
+	i <- which(checkin.a$business_id == x)
+	if(small){
+		which.cols <- colnames(checkin.a) %in% c("checkin_info.total", "type")
+	} else {
+		which.cols <- !colnames(checkin.a) %in% c("business_id")
+	}	
+	if(length(i) >= 1){
+		res <- checkin.a[i, which.cols]
+	} else {
+		res <- checkin.a[i, which.cols]
+		res[1, ] <- rep(NA, length(which.cols))
+	}
+	if(length(i) > 1){
+		warning("Unexpected case. Only using the info from the first match.")
+		print(checkin.a[i, which.cols])
+	}
+	## Avoid variable names overlap with columns from other tables
+	colnames(res) <- gsub("_info", "", colnames(res))
+	## Workaround to avoid issues with vectors and data.frames
+	res <- res[, -which(colnames(res)=="type")]
+	return(res)
+}
+
+processBusiness <- function(x, business.a) {
+	i <- which(business.a$business_id == x)
+	## Get the zipcode
+	business.a$zipcode <- as.integer(gsub("^.*(AZ|CA|CO|SC)(| )", "", business.a$full_address))
+	
+	which.cols <- !colnames(business.a) %in% c("business_id", "state", "type", "full_address", "neighborhoods", "name")
+	if(length(i) >= 1){
+		res <- business.a[i, which.cols]
+	} else {
+		res <- business.a[i, which.cols]
+		res[1, ] <- rep(NA, length(which.cols))
+	}
+	if(length(i) > 1){
+		warning("Unexpected case. Only using the info from the first match.")
+		print(business.a[i, which.cols])
+	}
+	## Avoid variable names overlap with columns from other tables
+	colnames(res) <- paste0("business.", colnames(res))
+	return(res)
+}
+
+processFun <- function(input, all, parallel=TRUE, small=FALSE) {
+	
+	## Test
+	if(TRUE){
+		input <- lapply(testProcessed, head, n=10)
+	}
+	
+	## Split into objects to save typing later
+	review <- input$review
+	business <- input$business
+	user <- input$user
+	checkin <- input$checkin
+	
+	review.a <- all$review
+	business.a <- all$business
+	user.a <- all$user
+	checkin.a <- all$checkin
+	
+	## Add the information from the user
+	add.user <- ldply(as.character(review$user_id), processUser, user.a=user.a, .parallel=parallel)
+	
+	## Process the checkin info
+	add.checkin <- ldply(as.character(review$business_id), processCheckin, checkin.a=checkin.a, small=small, .parallel=parallel)
+	if(small) {
+		colnames(add.checkin) <- "checkin.total"
+	}
+	
+	## Process the business info
+	add.business <- ldply(as.character(review$business_id), processBusiness, business.a=business.a, .parallel=parallel)
+	
+	## Remove uninformative columns from the review
+	colnames(review)[7:206] <- paste0("word.", colnames(review)[7:206])
+	add.review <- review[, !colnames(review) %in% c("type")]
+	if(small){
+		del <- grep("word.", colnames(add.review))
+		add.review <- add.review[, -del[51:length(del)]]
+	}
+	
+	## Merge the results
+	result <- cbind(add.review, add.user, add.business, add.checkin)
+	
+	## Done
+	return(result)
+}
+```
+
+Actually process the data and save the results
+```{r runProc}
+testReview <- processFun(testProcessed, all=all, small=TRUE)
+trainingReview <- processFun(trainingProcessed, all=all, small=TRUE)
+
+print(object.size(testReview), units="Mb")
+print(object.size(trainingReview), units="Mb")
+
+save(testReview, file="testReview.Rdata")
+save(trainingReview, file="trainingReview.Rdata")
+```
+
+
+Reproducibility
+```{r reproduc}
+print(proc.time())
+sessionInfo()
+```
