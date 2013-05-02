@@ -39,7 +39,7 @@ Just fit one gbm with 10-fold CV
 
 ## Fit gbm
 fit.gbm.pois <- gbm(votes.useful ~ ., data=trainC, distribution="poisson", cv.folds=10)
-summary(fit.gbm.pois)
+#summary(fit.gbm.pois)
 pretty.gbm.tree(fit.gbm.pois)
 show(fit.gbm.pois)
 
