@@ -10,7 +10,7 @@ library(cvTools)
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- TRUE
+test <- FALSE
 if(test) {
 	trainC <- trainC[1:1000, ]
 }
@@ -49,7 +49,7 @@ e.gbm.pois <- rmlspe(validateC$votes.useful, pred.pois, includeSE=TRUE)
 e.gbm.pois
 hist(pred.pois)
 
-save(fit.gbm.pois, e.gbm.pois, file="rf.Rdata")
+save(fit.gbm.pois, e.gbm.pois, file="gbm.Rdata")
 ```
 
 Reproducibility
