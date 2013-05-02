@@ -9,7 +9,7 @@ library(cvTools)
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- TRUE
+test <- FALSE
 if(test) {
 	trainC <- trainC[1:1000, ]
 }
@@ -45,8 +45,11 @@ cv.sel$reps
 
 ## Evaluate with validation data set
 e.pois <- rmspe(validateC$votes.useful, predict(fit.pois, validateC), includeSE=TRUE)
+hist(predict(fit.pois, validateC))
 e.pois.aic <- rmspe(validateC$votes.useful, predict(fit.pois.aic, validateC), includeSE=TRUE)
+hist(predict(fit.pois.aic, validateC))
 e.pois.bic <- rmspe(validateC$votes.useful, predict(fit.pois.bic, validateC), includeSE=TRUE)
+hist(predict(fit.pois.bic, validateC))
 e.glm <- list(e.pois, e.pois.aic, e.pois.bic)
 
 unlist(lapply(e.glm, function(x) { x$rmspe}))

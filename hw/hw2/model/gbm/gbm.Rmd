@@ -1,10 +1,10 @@
-rf with cross-validation
+gbm with cross-validation
 =======================
 
 Setup
 ```{r setup}
 ## Libs
-library(randomForest)
+library(gbm)
 library(cvTools)
 
 ## Following http://stackoverflow.com/questions/7830255/suggestions-for-speeding-up-random-forests
@@ -23,11 +23,11 @@ if(test) {
 }
 
 # Change column names to use randomForest
-words <- grep("word.", colnames(trainC))
-colnames(trainC)[words] <- paste0("word", 1:length(words))
+#words <- grep("word.", colnames(trainC))
+#colnames(trainC)[words] <- paste0("word", 1:length(words))
 
-words <- grep("word.", colnames(validateC))
-colnames(validateC)[words] <- paste0("word", 1:length(words))
+#words <- grep("word.", colnames(validateC))
+#colnames(validateC)[words] <- paste0("word", 1:length(words))
 
 
 ## Training set for CV
