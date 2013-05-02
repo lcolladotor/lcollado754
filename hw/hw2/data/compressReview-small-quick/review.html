@@ -199,11 +199,11 @@ library(doMC)
 
 <pre><code class="r">
 ## Set up for using plyr in parallel
-registerDoMC(4)
+registerDoMC(20)
 getDoParWorkers()
 </code></pre>
 
-<pre><code>## [1] 4
+<pre><code>## [1] 20
 </code></pre>
 
 <pre><code class="r">
@@ -1070,7 +1070,7 @@ lapply(trainingProcessed, summary)
 ##                                             3rd Qu.: 3.00   
 ##                                             Max.   :10.00   
 ##                                                             
-##          city                                       full_address    
+##          city                                        full_address   
 ##  Phoenix   :4154   7014 E Camelback Rd\nScottsdale, AZ 85251:   38  
 ##  Scottsdale:2024   Phoenix, AZ                              :   24  
 ##  Tempe     :1153   2000 E Rio Salado Pkwy\nTempe, AZ 85281  :   19  
@@ -2009,7 +2009,7 @@ processBusiness &lt;- function(x, business.a, parallel) {
 processFun &lt;- function(input, all, parallel = TRUE, small = FALSE) {
 
     ## Test
-    if (TRUE) {
+    if (FALSE) {
         input &lt;- lapply(testProcessed, head, n = 10)
     }
 
@@ -2059,13 +2059,13 @@ trainingReview &lt;- processFun(trainingProcessed, all = all, small = TRUE)
 print(object.size(testReview), units = &quot;Mb&quot;)
 </code></pre>
 
-<pre><code>## 3.7 Mb
+<pre><code>## 11.9 Mb
 </code></pre>
 
 <pre><code class="r">print(object.size(trainingReview), units = &quot;Mb&quot;)
 </code></pre>
 
-<pre><code>## 3.7 Mb
+<pre><code>## 114.2 Mb
 </code></pre>
 
 <pre><code class="r">
@@ -2079,29 +2079,33 @@ save(trainingReview, file = &quot;trainingReview.Rdata&quot;)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  14.914   2.022  16.663
+##  4101.7   340.7  1017.2
 </code></pre>
 
 <pre><code class="r">sessionInfo()
 </code></pre>
 
-<pre><code>## R version 2.15.3 (2013-03-01)
-## Platform: x86_64-apple-darwin9.8.0/x86_64 (64-bit)
+<pre><code>## R version 3.0.0 Patched (2013-04-30 r62698)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+##  [1] LC_CTYPE=en_US.iso885915       LC_NUMERIC=C                  
+##  [3] LC_TIME=en_US.iso885915        LC_COLLATE=en_US.iso885915    
+##  [5] LC_MONETARY=en_US.iso885915    LC_MESSAGES=en_US.iso885915   
+##  [7] LC_PAPER=C                     LC_NAME=C                     
+##  [9] LC_ADDRESS=C                   LC_TELEPHONE=C                
+## [11] LC_MEASUREMENT=en_US.iso885915 LC_IDENTIFICATION=C           
 ## 
 ## attached base packages:
-## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] parallel  stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
 ## [1] doMC_1.3.0      iterators_1.0.6 foreach_1.4.0   plyr_1.8       
-## [5] knitr_1.1      
+## [5] knitr_1.2      
 ## 
 ## loaded via a namespace (and not attached):
-## [1] codetools_0.2-8 compiler_2.15.3 digest_0.6.3    evaluate_0.4.3 
-## [5] formatR_0.7     stringr_0.6.2   tools_2.15.3
+## [1] codetools_0.2-8 compiler_3.0.0  digest_0.6.3    evaluate_0.4.3 
+## [5] formatR_0.7     stringr_0.6.2   tools_3.0.0
 </code></pre>
 
 </body>
