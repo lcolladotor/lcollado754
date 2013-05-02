@@ -1,0 +1,70 @@
+rf with cross-validation
+=======================
+
+Setup
+```{r setup}
+## Libs
+library(randomForest)
+library(cvTools)
+
+## Following http://stackoverflow.com/questions/7830255/suggestions-for-speeding-up-random-forests
+library("foreach")
+library("doSNOW")
+cores <- 20
+registerDoSNOW(makeCluster(cores, type="SOCK"))
+getDoParWorkers()
+
+## Data
+load("../lm/trainC.Rdata")
+
+test <- FALSE
+if(test) {
+	trainC <- trainC[1:1000, ]
+}
+
+# Change column names to use randomForest
+words <- grep("word.", colnames(trainC))
+colnames(trainC)[words] <- paste0("word", 1:length(words))
+
+words <- grep("word.", colnames(validateC))
+colnames(validateC)[words] <- paste0("word", 1:length(words))
+
+
+## Training set for CV
+trainx <- trainC[, !colnames(trainC) %in% "votes.useful"]
+trainy <- trainC$votes.useful
+
+## Test set for running rf
+valx <- validateC[, !colnames(validateC) %in% c("user_id", "business_id", "review_id", "user.name", "business.city", "votes.useful")]
+valy <- validateC$votes.useful
+
+```
+
+
+Just fit one big random forest (2000 trees)
+```{r models}
+
+## Fit random forests
+rf <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(x=trainx, y=trainy, data=trainC, xtest=valx, ytest=valy, importance=TRUE, keep.forest=TRUE, ntree=ntree)
+
+
+
+## Evaluate with the training data
+e.rf.train <- rmspe(trainy, rf$predicted, includeSE=TRUE)
+
+## Evaluate with validation data set
+e.rf.val <- rmspe(valy, predict(rf, valx), includeSE=TRUE)
+
+## Combine
+e.rf <- list(e.rf.train, e.rf.val)
+unlist(lapply(e.rf, function(x) { x$rmspe}))
+unlist(lapply(e.rf, function(x) { x$se}))
+
+save(rf, e.rf, file="rf.Rdata")
+```
+
+Reproducibility
+```{r reproduc}
+print(proc.time())
+sessionInfo()
+```
