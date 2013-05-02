@@ -1843,7 +1843,7 @@ processBusiness <- function(x, business.a, parallel) {
     return(res)
 }
 
-processFun <- function(input, all, parallel = TRUE, small = FALSE) {
+processFun <- function(input, all, parallel = TRUE, small = FALSE, training = FALSE) {
     
     ## Test
     if (FALSE) {
@@ -1873,7 +1873,8 @@ processFun <- function(input, all, parallel = TRUE, small = FALSE) {
         parallel = parallel)
     
     ## Remove uninformative columns from the review
-    colnames(review)[7:206] <- paste0("word.", colnames(review)[7:206])
+    col.start <- ifelse(training, 11, 7)
+    colnames(review)[col.start:ncol(review)] <- paste0("word.", colnames(review)[col.start:ncol(review)])
     add.review <- review[, !colnames(review) %in% c("type")]
     if (small) {
         del <- grep("word.", colnames(add.review))
@@ -1893,7 +1894,7 @@ Actually process the data and save the results
 
 ```r
 testReview <- processFun(testProcessed, all = all, small = TRUE)
-trainingReview <- processFun(trainingProcessed, all = all, small = TRUE)
+trainingReview <- processFun(trainingProcessed, all = all, small = TRUE, training = TRUE)
 
 print(object.size(testReview), units = "Mb")
 ```
@@ -1907,7 +1908,7 @@ print(object.size(trainingReview), units = "Mb")
 ```
 
 ```
-## 114.2 Mb
+## 113.3 Mb
 ```
 
 ```r
@@ -1926,7 +1927,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##  4101.7   340.7  1017.2
+##    4139     334    1027
 ```
 
 ```r

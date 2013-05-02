@@ -2006,7 +2006,7 @@ processBusiness &lt;- function(x, business.a, parallel) {
     return(res)
 }
 
-processFun &lt;- function(input, all, parallel = TRUE, small = FALSE) {
+processFun &lt;- function(input, all, parallel = TRUE, small = FALSE, training = FALSE) {
 
     ## Test
     if (FALSE) {
@@ -2036,7 +2036,8 @@ processFun &lt;- function(input, all, parallel = TRUE, small = FALSE) {
         parallel = parallel)
 
     ## Remove uninformative columns from the review
-    colnames(review)[7:206] &lt;- paste0(&quot;word.&quot;, colnames(review)[7:206])
+    col.start &lt;- ifelse(training, 11, 7)
+    colnames(review)[col.start:ncol(review)] &lt;- paste0(&quot;word.&quot;, colnames(review)[col.start:ncol(review)])
     add.review &lt;- review[, !colnames(review) %in% c(&quot;type&quot;)]
     if (small) {
         del &lt;- grep(&quot;word.&quot;, colnames(add.review))
@@ -2054,7 +2055,7 @@ processFun &lt;- function(input, all, parallel = TRUE, small = FALSE) {
 <p>Actually process the data and save the results</p>
 
 <pre><code class="r">testReview &lt;- processFun(testProcessed, all = all, small = TRUE)
-trainingReview &lt;- processFun(trainingProcessed, all = all, small = TRUE)
+trainingReview &lt;- processFun(trainingProcessed, all = all, small = TRUE, training = TRUE)
 
 print(object.size(testReview), units = &quot;Mb&quot;)
 </code></pre>
@@ -2065,7 +2066,7 @@ print(object.size(testReview), units = &quot;Mb&quot;)
 <pre><code class="r">print(object.size(trainingReview), units = &quot;Mb&quot;)
 </code></pre>
 
-<pre><code>## 114.2 Mb
+<pre><code>## 113.3 Mb
 </code></pre>
 
 <pre><code class="r">
@@ -2079,7 +2080,7 @@ save(trainingReview, file = &quot;trainingReview.Rdata&quot;)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##  4101.7   340.7  1017.2
+##    4139     334    1027
 </code></pre>
 
 <pre><code class="r">sessionInfo()

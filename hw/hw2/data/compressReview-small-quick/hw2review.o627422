@@ -1,0 +1,33 @@
+**** Job starts ****
+Wed May  1 22:44:22 EDT 2013
+  |                                                                         |                                                                 |   0%  |                                                                         |......                                                           |   9%
+  ordinary text without R code
+
+  |                                                                         |............                                                     |  18%
+label: setup
+  |                                                                         |..................                                               |  27%
+  ordinary text without R code
+
+  |                                                                         |........................                                         |  36%
+label: merge
+  |                                                                         |..............................                                   |  45%
+  ordinary text without R code
+
+  |                                                                         |...................................                              |  55%
+label: processFun
+  |                                                                         |.........................................                        |  64%
+  ordinary text without R code
+
+  |                                                                         |...............................................                  |  73%
+label: runProc
+  |                                                                         |.....................................................            |  82%
+  ordinary text without R code
+
+  |                                                                         |...........................................................      |  91%
+label: reproduc
+  |                                                                         |.................................................................| 100%
+  ordinary text without R code
+
+
+**** Job ends ****
+Wed May  1 23:01:30 EDT 2013
