@@ -1,0 +1,71 @@
+lm with cross-validation
+=======================
+
+Setup
+```{r setup}
+## Libs
+library(cvTools)
+
+## Data
+load("../../data/subsetTrain/train.Rdata")
+
+test <- FALSE
+if(test) {
+	train <- train[1:1000, ]
+}
+train <- train[, !colnames(train) %in% c("user_id", "business_id", "review_id", "user.name", "business.city")]
+
+## The actual function used by Yelp. Careful that this only works when using positive values (aka, it won't work for lm)
+rmlspe <- function(y, yHat, includeSE = FALSE) {
+	rmspe(log(y + 1), log(yHat + 1), includeSE = includeSE)
+}
+
+validateC <- validate[complete.cases(validate), ]
+trainC <- train[complete.cases(train), ]
+save(trainC, validateC, file="trainC.Rdata")
+```
+
+
+Fit 10-fold cross validation with 5 repetitions
+```{r models}
+## Fit the models
+fit.lm <- lm(votes.useful ~., data=trainC)
+fit.aic <- step(fit.lm, trace=0)
+fit.bic <- step(fit.lm, trace=0, k=log(nrow(trainC)))
+summary(fit.lm)
+summary(fit.aic)
+summary(fit.bic)
+
+## Determine the folds
+seed <- 20130501
+K <- 10
+R <- 5
+set.seed(seed)
+folds <- cvFolds(nrow(trainC), K=K, R=R)
+
+## Run the cross-validation
+cv.lm <- cvFit(fit.lm, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+cv.aic <- cvFit(fit.aic, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+cv.bic <- cvFit(fit.bic, y=trainC$votes.useful, data=trainC, cost=rmspe, costArgs=list(includeSE=TRUE), folds=folds)
+
+cv.sel <- cvSelect("lm"=cv.lm, "aic"=cv.aic, "bic"=cv.bic)
+cv.sel
+cv.sel$se
+cv.sel$reps
+
+e.lm <- rmspe(validateC$votes.useful, predict(fit.lm, validateC), includeSE=TRUE)
+e.aic <- rmspe(validateC$votes.useful, predict(fit.aic, validateC), includeSE=TRUE)
+e.bic <- rmspe(validateC$votes.useful, predict(fit.bic, validateC), includeSE=TRUE)
+e.lm
+e.aic
+e.bic
+
+rm(validate, validateC, train, trainC, test, seed, K, R)
+save.image(file="lm.Rdata")
+```
+
+Reproducibility
+```{r reproduc}
+print(proc.time())
+sessionInfo()
+```
