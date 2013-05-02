@@ -17,7 +17,7 @@ getDoParWorkers()
 ## Data
 load("../lm/trainC.Rdata")
 
-test <- TRUE
+test <- FALSE
 if(test) {
 	trainC <- trainC[1:1000, ]
 }
@@ -41,11 +41,11 @@ valy <- validateC$votes.useful
 ```
 
 
-Just fit one big random forest (5000 trees)
+Just fit one big random forest (2000 trees)
 ```{r models}
 
 ## Fit random forests
-rf <- foreach(ntree = rep(250, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(x=trainx, y=trainy, data=trainC, xtest=valx, ytest=valy, importance=TRUE, keep.forest=TRUE, ntree=ntree)
+rf <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(x=trainx, y=trainy, data=trainC, xtest=valx, ytest=valy, importance=TRUE, keep.forest=TRUE, ntree=ntree)
 
 
 
