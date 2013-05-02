@@ -10,8 +10,9 @@ library(cvTools)
 ## Following http://stackoverflow.com/questions/7830255/suggestions-for-speeding-up-random-forests
 library("foreach")
 library("doSNOW")
-cores <- 4
+cores <- 20
 registerDoSNOW(makeCluster(cores, type="SOCK"))
+getDoParWorkers()
 
 ## Data
 load("../lm/trainC.Rdata")
@@ -40,11 +41,11 @@ valy <- validateC$votes.useful
 ```
 
 
-Just fit one big random forest
+Just fit one big random forest (5000 trees)
 ```{r models}
 
 ## Fit random forests
-rf <- foreach(ntree = rep(50, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(x=trainx, y=trainy, data=trainC, xtest=valx, ytest=valy, importance=TRUE, keep.forest=TRUE, ntree=ntree)
+rf <- foreach(ntree = rep(250, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(x=trainx, y=trainy, data=trainC, xtest=valx, ytest=valy, importance=TRUE, keep.forest=TRUE, ntree=ntree)
 
 
 
