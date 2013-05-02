@@ -61,20 +61,22 @@ summary(pred.lm)
 
 
 pred.lm.aic <- predict(fit.aic, validateC)
-summary(pred.lm.bic)
+summary(pred.lm.aic)
 ```
 
 ```
-## Error: object 'pred.lm.bic' not found
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -0.838   0.627   1.130   1.390   1.880  14.000
 ```
 
 ```r
 pred.lm.aic[pred.lm.aic < 0] <- 0
-summary(pred.lm.bic)
+summary(pred.lm.aic)
 ```
 
 ```
-## Error: object 'pred.lm.bic' not found
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.627   1.130   1.390   1.880  14.000
 ```
 
 ```r
@@ -140,7 +142,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##   7.057   1.555   8.669
+##   7.318   1.321   8.695
 ```
 
 ```r

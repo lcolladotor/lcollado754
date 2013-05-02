@@ -228,17 +228,19 @@ summary(pred.lm)
 <pre><code class="r">
 
 pred.lm.aic &lt;- predict(fit.aic, validateC)
-summary(pred.lm.bic)
+summary(pred.lm.aic)
 </code></pre>
 
-<pre><code>## Error: object &#39;pred.lm.bic&#39; not found
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -0.838   0.627   1.130   1.390   1.880  14.000
 </code></pre>
 
 <pre><code class="r">pred.lm.aic[pred.lm.aic &lt; 0] &lt;- 0
-summary(pred.lm.bic)
+summary(pred.lm.aic)
 </code></pre>
 
-<pre><code>## Error: object &#39;pred.lm.bic&#39; not found
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.627   1.130   1.390   1.880  14.000
 </code></pre>
 
 <pre><code class="r">
@@ -292,7 +294,7 @@ save(e.eval.lm, file = &quot;eval-lm.Rdata&quot;)
 </code></pre>
 
 <pre><code>##    user  system elapsed 
-##   7.057   1.555   8.669
+##   7.318   1.321   8.695
 </code></pre>
 
 <pre><code class="r">sessionInfo()
