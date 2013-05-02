@@ -1,0 +1,181 @@
+% Document type and font specification
+\documentclass[11pt]{article}
+
+% Margin specification
+% Check http://en.wikibooks.org/wiki/LaTeX/Page_Layout for more info
+\usepackage[margin = 1in]{geometry}
+\usepackage[nottoc,notlof,notlot,numbib]{tocbibind}
+
+% Some misc and math packages
+% Check http://en.wikibooks.org/wiki/LaTeX/Mathematics for more info
+\usepackage{fancyhdr}
+\usepackage{manfnt}
+\usepackage{pgf}
+\usepackage{amsmath,amsthm,amssymb,natbib,graphicx}
+\usepackage{amsfonts}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage{mathrsfs} %mathscr{A}
+\usepackage{hyperref,graphicx}
+
+% Bibliography
+%\usepackage[style=numeric,firstinits=true]{biblatex}
+% Specify bib files
+%\addbibresource{biblio.bib}
+
+% Color
+\usepackage{color}
+
+% For specifying the counter style of enumerate
+\usepackage{enumerate}
+
+% Page style definition
+\pagestyle{fancy}
+% Customize this to your liking.
+\lhead{}\chead{}\rhead{By \myurlshort{http://biostat.jhsph.edu/~lcollado/}{L. Collado-Torres}}\lfoot{}\cfoot{\thepage}\rfoot{\today}
+
+% Line space
+\usepackage{setspace}
+% Default is normal, but un-comment below to your liking
+% \onehalfspacing
+% \doublespacing
+
+% Caption and figure def
+% Check http://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions for more info
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{wrapfig}
+
+% Math theorems shortcuts
+% Check http://en.wikibooks.org/wiki/LaTeX/Theorems for more info
+\usepackage{mathtools}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}[thm]
+\newtheorem{cor}{Corollary}[thm]
+\newtheorem{defi}{Definition}
+\newtheorem{conj}{Conjecture}
+\newtheorem{prop}{Proposition}
+\newtheorem{ex}{Example}
+\newtheorem{claim}{Claim}
+\newtheorem{fact}{Fact}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Some inherited commands
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\myurlshort}[2]{\href{#1}{\textcolor{gray}{\textsf{#2}}}}
+
+% knitr options
+<<setup, include=FALSE, cache=FALSE>>=
+# set global chunk options
+opts_chunk$set(fig.path='fig-', fig.align='center', fig.show='hold', fig.width=7, fig.height=7, out.width='.8\\linewidth')
+options(width=90)
+@
+
+
+\begin{document}
+
+%\begin{titlepage}
+\begin{center}
+
+% Actual title
+{ \bfseries Homework 2}\\%[0.3cm]
+\textsc{Advanced Methods IV 140.754}\\
+\normalsize
+\end{center}
+% \end{titlepage}
+
+%%%%%%%%%% Write document %%%%%%%%%%%%%%
+\section{GLM Basics}
+
+\begin{enumerate}[(a)]
+	\item
+	Link function: monotone differentiable function $g$ that connects the random and systematic components.
+	
+	If we have the a $Y_i$ whose density looks like this:
+\[ f(y_i | \theta, \phi) = \exp \left\{ \frac{ y_i \theta_i - b(\theta_i)}{a_i(\phi)} +c(y_i, \phi) \right\} \]
+then $g(\mu_i) = \theta_i$ is the canonical link.
+
+	The linear predictor, or systematic component, is $\eta_i = x_i' \beta$.
+	
+	IRLS is an algorithm that is very fast at estimating the coefficients $\beta$. You first get one guess, and then use it to calculate an adjusted dependent variable $z_i$ and some weights $w_i$. These are then used to get a new estimate of $\beta$ by performing weighted linear regression.
+	
+	\item The main advantage of using the canonical link is to get an easy to interpret result of the coefficients. However, it might not be the best option when you observe a variable that is censored according to some cutoff as Parichoy presented in lab (slide 9).
+	
+	\item Gaussian for bell shaped and symmetric data, Poisson for count data, Gamma for positive continuous data, Binomial for two categories (success, failure), Inverse Gaussian for positive data.
+	
+	\item Poisson:
+	\[f(Y|\theta=\lambda, \phi) = \frac{1}{y!} \exp\left( \log \lambda \cdot y - \lambda\right) =  \exp\left( \log \lambda \cdot y - \lambda - \log y!\right) \]
+	\[ \theta = \lambda, \phi = 1, b(\theta) = \log \lambda, a(\phi) = 1, c(y, \phi) = - \log y!\]
+	Gamma:
+	\[ f(Y|\theta, \phi) = \exp\left((\log y, y) \cdot (\alpha -1, -b) - (\log \Gamma(\alpha) - \alpha \log b) \right) \]
+	\[ \theta = (\alpha, b), \phi = 1, b(\theta) = \log \Gamma(\alpha) - \alpha \log b, a(\phi) = 1, c(y, \phi) = 0\]
+	Inverse Gaussian:
+	\[ f(Y|\theta, \phi) = \exp\left((y, 1/y) \cdot (-\lambda/2\mu^2, -\lambda/2)  - (- \lambda/\mu - 1/2 \log \lambda ) - 1/2 \log( 2 \pi y^3)\right) \]
+	\[ \theta = (\mu, \lambda), \phi = 1, b(\theta) = - \lambda/\mu - 1/2 \log \lambda , a(\phi)=1, c(y, \phi) = - 1/2 \log( 2 \pi y^3) \]
+	
+	\item 
+	\[ E[Y|\theta, \phi] = b'(\theta) \]
+	\[ Var(Y|\theta, \phi) = b''(\theta)a(\phi) \]
+	
+	\item
+	Poisson: 
+	\[ \log(\theta) \]
+	Gamma:
+	\[ -\theta^{-1} \]
+	Inverse Gaussian:
+	\[ \theta^{-2} \]
+	
+	\item
+	No data, or at least I can't download it.
+<<>>=
+## From ?glm
+clotting <- data.frame(
+    u = c(5,10,15,20,30,40,60,80,100),
+    lot1 = c(118,58,42,35,27,25,21,19,18),
+    lot2 = c(69,35,26,21,18,16,13,12,12))
+fit <- glm(lot1 ~ log(u), data = clotting, family = Gamma)
+summary(fit)
+
+@
+	\item
+	\item
+<<>>=
+library(MASS)
+confint(fit, level=0.90)
+@
+
+\end{enumerate}
+
+\section{Interpreting coefficients}
+
+\subsection{Model 1}
+$\beta_0$ is the log odds at baseline, $\beta_1$ is the log odds ratio holding $Z_i$ constant, and $\gamma_2$ is the log odds ratio holding $X_i$ constant.
+
+\subsection{Model 2}
+$\gamma_0$ is the log odds at baseline, $\gamma_1$ is the log odds ratio when $Z_i$ is 0, and $\gamma_2$ is the log odds ratio when $X_i$ is 0. Then $\gamma_3$ is the difference in the log odds ratio for a one unit increase in $Z_i$ holding $X_i$ constant.
+
+
+\subsection{Param vs non-param}
+In non-parametric, we have to say that it's the log ratio of the means instead of the mean instead of the log odds when we are assuming a parametric model; in particular a Binomial distribution.
+
+\subsection{Transformation}
+The inverse logit (called expit) might make things more interpretable for the non-statistician because the mean can be interpreted directly
+
+
+
+
+
+% For references, uncomment and remember to use the following series
+% when compling the pdf:
+% R Sweave, pdflatex, bibtex, pdflatex, pdflatex, open pdf
+% \printbibliography
+
+% Uncomment if you want to add the R session information
+%\tiny
+%<<info, results='asis', echo = FALSE>>=
+%toLatex(sessionInfo())
+%@
+
+
+
+\end{document}
