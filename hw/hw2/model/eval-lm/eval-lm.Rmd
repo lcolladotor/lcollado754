@@ -26,13 +26,13 @@ pred.lm[ pred.lm < 0] <- 0
 summary(pred.lm)
 
 
-pred.lm.aic <- predict(fit.lm.aic, validateC)
+pred.lm.aic <- predict(fit.aic, validateC)
 summary(pred.lm.bic)
 pred.lm.aic[ pred.lm.aic < 0] <- 0
 summary(pred.lm.bic)
 
 
-pred.lm.bic <- predict(fit.lm.bic, validateC)
+pred.lm.bic <- predict(fit.bic, validateC)
 summary(pred.lm.bic)
 pred.lm.bic[ pred.lm.bic < 0] <- 0
 summary(pred.lm.bic)
