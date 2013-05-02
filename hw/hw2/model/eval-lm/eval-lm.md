@@ -37,6 +37,187 @@ rmlspe <- function(y, yHat, includeSE = FALSE) {
 Look at the predictions after truncating them to be greater or equal to 0
 
 
+```r
+pred.lm <- predict(fit.lm, validateC)
+summary(pred.lm)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -0.831   0.627   1.130   1.390   1.880  14.000
+```
+
+```r
+pred.lm[pred.lm < 0] <- 0
+summary(pred.lm)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.627   1.130   1.390   1.880  14.000
+```
+
+```r
 
 
+pred.lm.aic <- predict(fit.lm.aic, validateC)
+```
+
+```
+## Error: object 'fit.lm.aic' not found
+```
+
+```r
+summary(pred.lm.bic)
+```
+
+```
+## Error: object 'pred.lm.bic' not found
+```
+
+```r
+pred.lm.aic[pred.lm.aic < 0] <- 0
+```
+
+```
+## Error: object 'pred.lm.aic' not found
+```
+
+```r
+summary(pred.lm.bic)
+```
+
+```
+## Error: object 'pred.lm.bic' not found
+```
+
+```r
+
+
+pred.lm.bic <- predict(fit.lm.bic, validateC)
+```
+
+```
+## Error: object 'fit.lm.bic' not found
+```
+
+```r
+summary(pred.lm.bic)
+```
+
+```
+## Error: object 'pred.lm.bic' not found
+```
+
+```r
+pred.lm.bic[pred.lm.bic < 0] <- 0
+```
+
+```
+## Error: object 'pred.lm.bic' not found
+```
+
+```r
+summary(pred.lm.bic)
+```
+
+```
+## Error: object 'pred.lm.bic' not found
+```
+
+```r
+
+
+e.l.lm <- rmlspe(validateC$votes.useful, pred.lm, includeSE = TRUE)
+e.l.aic <- rmlspe(validateC$votes.useful, pred.lm.aic, includeSE = TRUE)
+```
+
+```
+## Error: object 'pred.lm.aic' not found
+```
+
+```r
+e.l.bic <- rmlspe(validateC$votes.useful, pred.lm.bic, includeSE = TRUE)
+```
+
+```
+## Error: object 'pred.lm.bic' not found
+```
+
+```r
+
+e.eval.lm <- list(e.l.lm, e.l.aic, e.l.bic)
+```
+
+```
+## Error: object 'e.l.aic' not found
+```
+
+```r
+unlist(lapply(e.eval.lm, function(x) {
+    x$rmspe
+}))
+```
+
+```
+## Error: object 'e.eval.lm' not found
+```
+
+```r
+unlist(lapply(e.eval.lm, function(x) {
+    x$se
+}))
+```
+
+```
+## Error: object 'e.eval.lm' not found
+```
+
+```r
+
+save(e.eval.lm, file = "eval-lm.Rdata")
+```
+
+```
+## Error: object 'e.eval.lm' not found
+```
+
+
+Reproducibility
+
+```r
+print(proc.time())
+```
+
+```
+##    user  system elapsed 
+##   6.419   1.116   7.596
+```
+
+```r
+sessionInfo()
+```
+
+```
+## R version 3.0.0 Patched (2013-04-30 r62698)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.iso885915       LC_NUMERIC=C                  
+##  [3] LC_TIME=en_US.iso885915        LC_COLLATE=en_US.iso885915    
+##  [5] LC_MONETARY=en_US.iso885915    LC_MESSAGES=en_US.iso885915   
+##  [7] LC_PAPER=C                     LC_NAME=C                     
+##  [9] LC_ADDRESS=C                   LC_TELEPHONE=C                
+## [11] LC_MEASUREMENT=en_US.iso885915 LC_IDENTIFICATION=C           
+## 
+## attached base packages:
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## 
+## other attached packages:
+## [1] cvTools_0.3.2    robustbase_0.9-7 lattice_0.20-15  knitr_1.2       
+## 
+## loaded via a namespace (and not attached):
+## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    grid_3.0.0    
+## [5] stringr_0.6.2  tools_3.0.0
+```
 
