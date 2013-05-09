@@ -1,0 +1,19 @@
+Learning about packages
+=======================
+
+
+```{r}
+
+library(devtools)
+library(roxygen2)
+library(testthat)
+```
+
+
+```{r eval=FALSE}
+# Set working directory
+setwd("~/Desktop")
+
+# Create a new package
+create("fdrreg")
+```
