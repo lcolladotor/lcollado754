@@ -1,0 +1,19 @@
+Package: lcollado754
+Title: Final project for 140.754 by L. Collado-Torres
+Version: 0.1
+Author: Leonardo Collado-Torres <lcollado@jhsph.edu>
+Maintainer: Leonardo Collado-Torres <lcollado@jhsph.edu>
+Description: Analysis of 2,500 peer-to-peer loans issued through the Lending
+    Club for the 140.754 final project.
+Depends:
+    R (>= 3.0.0)
+License: GPL-2
+LazyData: true
+Suggests:
+    devtools,
+    plyr
+Collate:
+    'lcollado754-package.R'
+    'loansData2-data.R'
+    'loansData-data.R'
+    'preprocess.R'
