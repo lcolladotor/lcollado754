@@ -524,34 +524,34 @@ head(ready)
 ## 4            10000                       9975          9.99          36
 ## 5            12000                      12000         11.71          36
 ## 6             6000                       6000         15.31          36
-##   Debt.To.Income.Ratio Open.CREDIT.Lines Revolving.CREDIT.Balance
-## 1                14.90                14                    14272
-## 2                28.36                12                    11140
-## 3                23.81                14                    21977
-## 4                14.30                10                     9346
-## 5                18.78                11                    14469
-## 6                20.05                17                    10391
-##   Inquiries.in.the.Last.6.Months Issued.Date Earliest.CREDIT.Line
-## 1                              2  2012-11-02           1995-02-25
-## 2                              1  2013-01-17           2005-07-24
-## 3                              1  2012-10-23           1998-12-31
-## 4                              0  2010-11-03           1999-10-29
-## 5                              0  2011-09-30           1992-04-07
-## 6                              2  2012-07-25           2000-04-15
-##   Total.CREDIT.Lines State.Region FICO.num Employment.Length.Mod
-## 1                 43           04      737              < 1 year
-## 2                 20           06      717               2 years
-## 3                 33           09      692               2 years
-## 4                 16           07      697               5 years
-## 5                 14           02      697               9 years
-## 6                 34           01      672               3 years
-##   Monthly.Income.Log   Loan.Purpose.Mod Home.Ownership.Mod
-## 1              8.786 debt_consolidation           MORTGAGE
-## 2              8.430 debt_consolidation           MORTGAGE
-## 3              9.350 debt_consolidation           MORTGAGE
-## 4              8.251 debt_consolidation           MORTGAGE
-## 5              8.069        credit_card               RENT
-## 6              8.495              other                OWN
+##   Debt.To.Income.Ratio Open.CREDIT.Lines Inquiries.in.the.Last.6.Months
+## 1                14.90                14                              2
+## 2                28.36                12                              1
+## 3                23.81                14                              1
+## 4                14.30                10                              0
+## 5                18.78                11                              0
+## 6                20.05                17                              2
+##   Issued.Date Earliest.CREDIT.Line Total.CREDIT.Lines State.Region
+## 1  2012-11-02           1995-02-25                 43           04
+## 2  2013-01-17           2005-07-24                 20           06
+## 3  2012-10-23           1998-12-31                 33           09
+## 4  2010-11-03           1999-10-29                 16           07
+## 5  2011-09-30           1992-04-07                 14           02
+## 6  2012-07-25           2000-04-15                 34           01
+##   FICO.num Employment.Length.Mod Monthly.Income.Log   Loan.Purpose.Mod
+## 1      737              < 1 year              8.786 debt_consolidation
+## 2      717               2 years              8.430 debt_consolidation
+## 3      692               2 years              9.350 debt_consolidation
+## 4      697               5 years              8.251 debt_consolidation
+## 5      697               9 years              8.069        credit_card
+## 6      672               3 years              8.495              other
+##   Home.Ownership.Mod Revolving.CREDIT.Balance.log
+## 1           MORTGAGE                        9.566
+## 2           MORTGAGE                        9.318
+## 3           MORTGAGE                        9.998
+## 4           MORTGAGE                        9.143
+## 5               RENT                        9.580
+## 6                OWN                        9.249
 ```
 
 ```r
@@ -575,38 +575,38 @@ summary(ready)
 ##  3rd Qu.:36.0   3rd Qu.:20.67        3rd Qu.:13.0     
 ##  Max.   :60.0   Max.   :34.91        Max.   :38.0     
 ##                                      NA's   :2        
-##  Revolving.CREDIT.Balance Inquiries.in.the.Last.6.Months
-##  Min.   :     0           Min.   :0.000                 
-##  1st Qu.:  5586           1st Qu.:0.000                 
-##  Median : 10962           Median :0.000                 
-##  Mean   : 15245           Mean   :0.906                 
-##  3rd Qu.: 18889           3rd Qu.:1.000                 
-##  Max.   :270800           Max.   :9.000                 
-##  NA's   :2                NA's   :2                     
-##   Issued.Date         Earliest.CREDIT.Line Total.CREDIT.Lines
-##  Min.   :2007-06-16   Min.   :1969-05-20   Min.   : 3        
-##  1st Qu.:2011-03-31   1st Qu.:1994-09-05   1st Qu.:15        
-##  Median :2012-03-09   Median :1998-12-30   Median :22        
-##  Mean   :2011-10-23   Mean   :1997-09-30   Mean   :23        
-##  3rd Qu.:2012-09-17   3rd Qu.:2002-01-18   3rd Qu.:30        
-##  Max.   :2013-01-18   Max.   :2009-03-28   Max.   :63        
-##  NA's   :73           NA's   :6            NA's   :2         
-##   State.Region    FICO.num   Employment.Length.Mod Monthly.Income.Log
-##  09     :523   Min.   :642   10+ years:653         Min.   : 6.38     
-##  04     :421   1st Qu.:682   < 1 year :250         1st Qu.: 8.16     
-##  02     :349   Median :702   2 years  :244         Median : 8.52     
-##  05     :284   Mean   :708   3 years  :235         Mean   : 8.50     
-##  03     :276   3rd Qu.:727   5 years  :202         3rd Qu.: 8.82     
-##  06     :243   Max.   :832   (Other)  :839         Max.   :11.54     
-##  (Other):404                 NA's     : 77         NA's   :1         
-##            Loan.Purpose.Mod Home.Ownership.Mod
-##  credit_card       : 444    MORTGAGE:1148     
-##  debt_consolidation:1307    OWN     : 200     
-##  other             : 749    RENT    :1146     
-##                             NA's    :   6     
-##                                               
-##                                               
-## 
+##  Inquiries.in.the.Last.6.Months  Issued.Date         Earliest.CREDIT.Line
+##  Min.   :0.000                  Min.   :2007-06-16   Min.   :1969-05-20  
+##  1st Qu.:0.000                  1st Qu.:2011-03-31   1st Qu.:1994-09-05  
+##  Median :0.000                  Median :2012-03-09   Median :1998-12-30  
+##  Mean   :0.906                  Mean   :2011-10-23   Mean   :1997-09-30  
+##  3rd Qu.:1.000                  3rd Qu.:2012-09-17   3rd Qu.:2002-01-18  
+##  Max.   :9.000                  Max.   :2013-01-18   Max.   :2009-03-28  
+##  NA's   :2                      NA's   :73           NA's   :6           
+##  Total.CREDIT.Lines  State.Region    FICO.num   Employment.Length.Mod
+##  Min.   : 3         09     :523   Min.   :642   10+ years:653        
+##  1st Qu.:15         04     :421   1st Qu.:682   < 1 year :250        
+##  Median :22         02     :349   Median :702   2 years  :244        
+##  Mean   :23         05     :284   Mean   :708   3 years  :235        
+##  3rd Qu.:30         03     :276   3rd Qu.:727   5 years  :202        
+##  Max.   :63         06     :243   Max.   :832   (Other)  :839        
+##  NA's   :2          (Other):404                 NA's     : 77        
+##  Monthly.Income.Log           Loan.Purpose.Mod Home.Ownership.Mod
+##  Min.   : 6.38      credit_card       : 444    MORTGAGE:1148     
+##  1st Qu.: 8.16      debt_consolidation:1307    OWN     : 200     
+##  Median : 8.52      other             : 749    RENT    :1146     
+##  Mean   : 8.50                                 NA's    :   6     
+##  3rd Qu.: 8.82                                                   
+##  Max.   :11.54                                                   
+##  NA's   :1                                                       
+##  Revolving.CREDIT.Balance.log
+##  Min.   : 0.00               
+##  1st Qu.: 8.63               
+##  Median : 9.30               
+##  Mean   : 9.03               
+##  3rd Qu.: 9.85               
+##  Max.   :12.51               
+##  NA's   :2
 ```
 
 
@@ -645,7 +645,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##  12.214   0.318  12.421
+##  12.824   0.333  13.129
 ```
 
 

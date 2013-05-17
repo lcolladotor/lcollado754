@@ -26,4 +26,16 @@ reproduceAnalysis()
 
 They are stored in __/lcollado754run/__
 
+## Example on how to use inferInterestRate()
+
+Look at how to do so [here](http://htmlpreview.github.io/?https://github.com/lcolladotor/lcollado754/blob/master/final/lcollado754run/Infer/Infer.html).
+
+## Read the report by running
+
+```S
+library(lcollado754)
+browseVignettes("lcollado754")
+```
+
+
 ## Enjoy!

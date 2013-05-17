@@ -18,7 +18,9 @@ Suggests:
     randomForest,
     foreach,
     doSNOW,
-    car
+    car,
+    xtable
+VignetteBuilder: knitr
 Collate:
     'lcollado754-package.R'
     'loansData2-data.R'

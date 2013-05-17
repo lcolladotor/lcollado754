@@ -41,8 +41,11 @@ postprocess <- function(data) {
 	## Re-order the employment length
 	data$Employment.Length.Mod <- factor(data$Employment.Length, levels=c('< 1 year','1 year','2 years','3 years','4 years','5 years','6 years','7 years','8 years','9 years', '10+ years'), ordered=TRUE)
 	
+	## Balance
+	data$Revolving.CREDIT.Balance.log <- log(1 + data$Revolving.CREDIT.Balance)
+	
 	## Remove variables that won't be used anymore
-	data <- data[, !colnames(data) %in% c("Monthly.Income", "State.Coast", "State", "Loan.Purpose", "Home.Ownership", "Employment.Length", "FICO.Range")]	
+	data <- data[, !colnames(data) %in% c("Monthly.Income", "State.Coast", "State", "Loan.Purpose", "Home.Ownership", "Employment.Length", "FICO.Range", "Revolving.CREDIT.Balance")]	
 	
 	## Done =)
 	return(data)

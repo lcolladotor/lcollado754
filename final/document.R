@@ -6,6 +6,9 @@ if(FALSE) create("lcollado754")
 ## Create the documentation fresh
 document("lcollado754", clean=TRUE)
 
+## Build the vignette
+build_vignettes("lcollado754")
+
 ## Check the doc, pkg
 check_doc("lcollado754")
 check("lcollado754")
@@ -14,8 +17,8 @@ check("lcollado754")
 library(lcollado754)
 help(package=lcollado754)
 
-## EDA
-reproduceAnalysis("EDA")
+## All of it
+reproduceAnalysis("all")
 
 
 

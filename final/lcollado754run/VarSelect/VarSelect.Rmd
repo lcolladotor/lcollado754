@@ -147,7 +147,7 @@ flm.aic$call
 
 ## Random forest with 
 paste(varsToUse, collapse=" + ") # To get the vars
-rf2 <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(Interest.Rate ~ FICO.num + Loan.Length + Amount.Funded.By.Investors + Amount.Requested + Issued.Date + Inquiries.in.the.Last.6.Months + Open.CREDIT.Lines + Revolving.CREDIT.Balance, data = data, importance = TRUE, keep.forest = TRUE, ntree = ntree, xtest=edata[, which(colnames(edata) %in% varsToUse)], ytest=edata$Interest.Rate)
+rf2 <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(Interest.Rate ~ FICO.num + Loan.Length + Amount.Funded.By.Investors + Amount.Requested + Issued.Date + Inquiries.in.the.Last.6.Months + Open.CREDIT.Lines + Revolving.CREDIT.Balance.log, data = data, importance = TRUE, keep.forest = TRUE, ntree = ntree, xtest=edata[, which(colnames(edata) %in% varsToUse)], ytest=edata$Interest.Rate)
 
 ## Importance
 rf2$importance
@@ -172,8 +172,7 @@ The last random forest model performs better than the linear model and the naive
 
 ```{r evaluate}
 ## Methods evaluated on the 30% of the data using robust mean squared prediction error (rmspe)
-cv.flmaic
-cv.flmaic$se
+rmspe(edata$Interest.Rate, predict(flm.aic, edata), includeSE = TRUE)
 e.rf
 e.rf2
 ```

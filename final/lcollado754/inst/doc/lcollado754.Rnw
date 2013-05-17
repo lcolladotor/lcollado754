@@ -1,0 +1,207 @@
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{}
+
+% Document type and font specification
+\documentclass[11pt]{article}
+
+% Margin specification
+% Check http://en.wikibooks.org/wiki/LaTeX/Page_Layout for more info
+\usepackage[margin = 1in]{geometry}
+\usepackage[nottoc,notlof,notlot,numbib]{tocbibind}
+
+% Some misc and math packages
+% Check http://en.wikibooks.org/wiki/LaTeX/Mathematics for more info
+\usepackage{fancyhdr}
+\usepackage{manfnt}
+\usepackage{pgf}
+\usepackage{amsmath,amsthm,amssymb,natbib,graphicx}
+\usepackage{amsfonts}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage{mathrsfs} %mathscr{A}
+\usepackage{hyperref,graphicx}
+
+% Bibliography
+%\usepackage[style=numeric,firstinits=true]{biblatex}
+% Specify bib files
+%\addbibresource{biblio.bib}
+
+% Color
+\usepackage{color}
+
+% For specifying the counter style of enumerate
+\usepackage{enumerate}
+
+% Page style definition
+\pagestyle{fancy}
+% Customize this to your liking.
+\lhead{}\chead{}\rhead{By \myurlshort{http://biostat.jhsph.edu/~lcollado/}{L. Collado-Torres}}\lfoot{}\cfoot{\thepage}\rfoot{\today}
+
+% Line space
+\usepackage{setspace}
+% Default is normal, but un-comment below to your liking
+% \onehalfspacing
+% \doublespacing
+
+% Caption and figure def
+% Check http://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions for more info
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{wrapfig}
+
+% Math theorems shortcuts
+% Check http://en.wikibooks.org/wiki/LaTeX/Theorems for more info
+\usepackage{mathtools}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}[thm]
+\newtheorem{cor}{Corollary}[thm]
+\newtheorem{defi}{Definition}
+\newtheorem{conj}{Conjecture}
+\newtheorem{prop}{Proposition}
+\newtheorem{ex}{Example}
+\newtheorem{claim}{Claim}
+\newtheorem{fact}{Fact}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Some inherited commands
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\myurlshort}[2]{\href{#1}{\textcolor{gray}{\textsf{#2}}}}
+
+% knitr options
+<<setup, include=FALSE, cache=FALSE>>=
+# set global chunk options
+library(knitr)
+opts_chunk$set(fig.path='fig-', fig.align='center', fig.show='hold', fig.width=7, fig.height=7, out.width='.8\\linewidth', echo=FALSE, message=FALSE)
+options(width=70)
+@
+
+
+\begin{document}
+
+%\begin{titlepage}
+\begin{center}
+
+% Actual title
+{ \bfseries Final project for 140.754}\\%[0.3cm]
+\textsc{Advanced Methods IV 140.754}\\
+\normalsize
+\end{center}
+% \end{titlepage}
+
+%%%%%%%%%% Write document %%%%%%%%%%%%%%
+
+\begin{abstract}
+	The Lending Club (\url{https://www.lendingclub.com/}) has a data set of 2,500 peer-to-peer loans with interest rates records and other information regarding these loans. The goal of this project is to determine variables that are important at inferring the interest rate of a loan beyond the FICO score. In addition, to ensure maximum reproducibility this project has been compiled in an R package \emph{lcollado754}.
+\end{abstract}
+
+<<preamble>>=
+library(lcollado754)
+pre <- preprocess()
+data <- postprocess(pre)
+@
+
+
+
+\section{Introduction}
+The 2,500 peer-to-peer loans from the Lending Club were analyzed in this project. As can be seen in Figure \ref{fig:fico} the FICO score is associated with the interest rate. Overall, the higher the FICO score, the lower the interest rate assigned. The challenge is to then determine if other variables in this data set can help explain differences in interest rates for persons with the same FICO score.
+
+<<fico, fig.cap="Boxplots of the interest rate by FICO score category. Higher FICO scores lead to lower interest rates.", fig.pos="h">>=
+with(pre, boxplot(Interest.Rate ~ FICO.Range, las = 2, ylab = "Interest Rate", 
+    main = "Interest Rate by FICO score", col = "orange"))
+@
+
+
+To achieve the goal of determining which variables explain the interest rate once the FICO score has been accounted for we performed an extensive exploratory data analysis. Some variables, like whether the state is in the East or West of the United States had no relation whatsoever. 
+
+From this analysis we also determined that it would be best to reduce the complexity from some of categorical variables. For example \emph{loan purpose} was reduced to \emph{credit card, debt consolidation, or other}. This was because the other categories were very similar in terms of their relation to interest rates and FICO scores.
+
+The log revolving credit balance seems to have a more complicated relationship than the other variables with both the FICO score and the interest rate as shown in Figure \ref{fig:revolve}. It is notably better to have a low revolving credit balance as long as it's not 0. The distribution of the log revolving credit balance is highly compated around 9. However, it is important to note that at the end range, higher values lead to higher FICO scores and lower interest rates.
+
+<<revolve, fig.cap="Scatterplot matrix between the interest rate, the FICO score and the logarithm of the the revolving credit balance. The FICO score is shown as numbers taken from the mean value of the categories. The logarithm of the revolving credit balance was taken after adding 1 for ease of transformation purposes.">>=
+library(car)
+scatterplotMatrix(~Interest.Rate + FICO.num + log(Revolving.CREDIT.Balance + 
+    1), data = pre, spread = FALSE)
+@
+
+
+
+\section{Methods}
+
+The distribution of the interest rate is rather bell-shaped as shown in Figure \ref{fig:revolve} and so were other numerical variables. It thus made sense to use linear regression methods despite the fact that the domain of the interest rate is bounded in $[0, 100]$. Two general methods were used: multiple linear regression and random forests. Random forests have been shown before to outperform linear models in terms of prediction accuracy and they can be used for regression-type problems and thus seem like a good logical method to compare the linear model to.
+
+In order to compare the two methods, the data set was split into 70\% for training purposes and 30\% for evaluation purposes. Models were fit on the training data and cross validated within it. Then the robust mean squared prediction error on the evaluating data set was used to determine which model performed best.
+
+\subsection{Linear Model}
+
+A linear model was fit with all the variables (after pre and post processing). This model was compared against the minimal model using only the FICO score to predict the interest rate and a the model resulting from step-wise model selection (forward and backward) using AIC. The models were then compared to determine which of the three performed the best.
+
+To further evaluate the resulting model, a 10 fold cross validation using 5 replicates was performed. In addition, regular model diagnostic plots were created to evaluate that the linear model assumptions were being met.
+
+
+\subsection{Random Forest}
+
+First a random forest with 800 trees was fit with all the variables using the training data. The resulting model was then used to perform a cross validation analysis of the number of predictive variables that best predict the outcome of interest. It turns out that the top 8 variables ranked by importance reduce the error.
+
+A second random forest with 800 trees was fit using only the 8 variables selected from the first result. Both random forests were compared by evaluating their robust mean squared prediction error using the evaluation data set.
+
+\section{Results}
+
+\subsection{Linear model}
+
+The step-wise variable selection procedure determined that the variables \emph{amount requested, amount funded by investors, loan length, debt to income ratio, issued date, inquiries in the last 6 months, issued date, earliest credit line, FICO (numerical), log monthly income, loan purpose, home ownership status, and log revolving credit balance} were important. Furthermore, this model has good model diagnostics and is significantly better than the naive model (p-value less than 2e-16). The full data model did not perform better than the variable selected model.
+
+\subsection{Random Forest}
+
+The cross validation of feature selection on the first random forest determined that that the it performs the best when using the top 8 variables ranked by importance. These are \emph{FICO score (numerical), loan length, amount funded by investors, amount requested, issued date, inquiries in the last 6 months, open credit lines, and log revolving credit balance}. This is a subset of the variables selected by the step-wise variable selection with the linear model. 
+
+When using the evaluation data set to calculate the robust mean squared prediction error, the model that performed the best is the random forest using the 8 variables described previously as shown in Table \ref{tab:rmspe}.
+
+<<rmspe, results='asis'>>=
+library(xtable)
+d <- data.frame(RMSPE=c(1.976, 1.59, 1.554), SE=c(0.0614, 0.05718, 0.05611), Model=c("LM step", "Initial Rand. Forest", "Rand. Forest with top 8 vars."))
+print(xtable(d, caption="Robust mean squared prediction error for the step-wise variable selected model from linear regression, the initial random forest, and the random forest with the top 8 variables ranked by importance. Numbers are rounded to two digits.", label="tab:rmspe"))
+@
+
+
+
+\section{Conclusions}
+
+There are 7 variables that can help explain the interest rate once the FICO score has been taken into account. These were determined by using random forests trained on 70\% of the data. The resulting model has a robust mean squared prediction error of 1.554 with an standard error of 0.05611. 
+
+This model outperformed a naive initial random forest using all the variables (after pre and post processing) and a step wise variable selection procedure on a multiple linear regression model. The difference is rather significant with the latter of the two.
+
+This analysis is reproducible in its entirety by using the \emph{lcollado754} package. This includes the exploratory data analysis and variable selection steps that can be reproduced as HTML reports using \emph{knitr}. Furthermore, this report is the vignette from the package and can be re-built by the user if such a thing is desired.
+
+
+\section{Reproducibility}
+
+Please check \url{https://github.com/lcolladotor/lcollado754/tree/master/final} for details on how to install the \emph{lcollado754} package and reproduce the results.
+
+\section{References}
+
+\begin{enumerate}
+	\item Downloaded the states regions from \url{https://aqs.epa.gov/aqsweb/codes/data/StateCountyCodes.csv}.
+	\item The \emph{knitr} package \url{http://yihui.name/knitr/} was heavily used in this analysis.
+	\item HTML reports are formatted for maximum cool-ness factor using Knitr Bootstrap \url{https://github.com/jimhester/knitr_bootstrap}.	
+\end{enumerate}
+
+
+
+
+
+
+
+% For references, uncomment and remember to use the following series
+% when compling the pdf:
+% R Sweave, pdflatex, bibtex, pdflatex, pdflatex, open pdf
+% \printbibliography
+
+% Uncomment if you want to add the R session information
+%\tiny
+%<<info, results='asis', echo = FALSE>>=
+%toLatex(sessionInfo())
+%@
+
+
+
+\end{document}

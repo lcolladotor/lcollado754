@@ -148,38 +148,38 @@ summary(fdata)
 ##  3rd Qu.:36.0   3rd Qu.:20.50        3rd Qu.:13.0     
 ##  Max.   :60.0   Max.   :34.91        Max.   :38.0     
 ##                                                       
-##  Revolving.CREDIT.Balance Inquiries.in.the.Last.6.Months
-##  Min.   :     0           Min.   :0.000                 
-##  1st Qu.:  5526           1st Qu.:0.000                 
-##  Median : 10946           Median :0.000                 
-##  Mean   : 15212           Mean   :0.906                 
-##  3rd Qu.: 18900           3rd Qu.:1.000                 
-##  Max.   :270800           Max.   :9.000                 
-##                                                         
-##   Issued.Date         Earliest.CREDIT.Line Total.CREDIT.Lines
-##  Min.   :2007-07-05   Min.   :1969-05-20   Min.   : 3.0      
-##  1st Qu.:2011-03-31   1st Qu.:1994-09-02   1st Qu.:15.0      
-##  Median :2012-03-07   Median :1998-12-26   Median :22.0      
-##  Mean   :2011-10-22   Mean   :1997-10-19   Mean   :23.1      
-##  3rd Qu.:2012-09-17   3rd Qu.:2002-01-14   3rd Qu.:30.0      
-##  Max.   :2013-01-18   Max.   :2009-03-28   Max.   :63.0      
-##                                                              
-##   State.Region    FICO.num   Monthly.Income.Log           Loan.Purpose.Mod
-##  09     :493   Min.   :642   Min.   : 6.38      credit_card       : 410   
-##  04     :397   1st Qu.:682   1st Qu.: 8.16      debt_consolidation:1229   
-##  02     :328   Median :702   Median : 8.52      other             : 709   
-##  05     :265   Mean   :708   Mean   : 8.51                                
-##  03     :262   3rd Qu.:732   3rd Qu.: 8.84                                
-##  06     :233   Max.   :832   Max.   :11.54                                
-##  (Other):370                                                              
-##  Home.Ownership.Mod Employment.Length.Mod
-##  MORTGAGE:1078      10+ years:628        
-##  OWN     : 183      < 1 year :242        
-##  RENT    :1087      2 years  :240        
-##                     3 years  :230        
-##                     5 years  :193        
-##                     4 years  :187        
-##                     (Other)  :628
+##  Inquiries.in.the.Last.6.Months  Issued.Date         Earliest.CREDIT.Line
+##  Min.   :0.000                  Min.   :2007-07-05   Min.   :1969-05-20  
+##  1st Qu.:0.000                  1st Qu.:2011-03-31   1st Qu.:1994-09-02  
+##  Median :0.000                  Median :2012-03-07   Median :1998-12-26  
+##  Mean   :0.906                  Mean   :2011-10-22   Mean   :1997-10-19  
+##  3rd Qu.:1.000                  3rd Qu.:2012-09-17   3rd Qu.:2002-01-14  
+##  Max.   :9.000                  Max.   :2013-01-18   Max.   :2009-03-28  
+##                                                                          
+##  Total.CREDIT.Lines  State.Region    FICO.num   Monthly.Income.Log
+##  Min.   : 3.0       09     :493   Min.   :642   Min.   : 6.38     
+##  1st Qu.:15.0       04     :397   1st Qu.:682   1st Qu.: 8.16     
+##  Median :22.0       02     :328   Median :702   Median : 8.52     
+##  Mean   :23.1       05     :265   Mean   :708   Mean   : 8.51     
+##  3rd Qu.:30.0       03     :262   3rd Qu.:732   3rd Qu.: 8.84     
+##  Max.   :63.0       06     :233   Max.   :832   Max.   :11.54     
+##                     (Other):370                                   
+##            Loan.Purpose.Mod Home.Ownership.Mod Employment.Length.Mod
+##  credit_card       : 410    MORTGAGE:1078      10+ years:628        
+##  debt_consolidation:1229    OWN     : 183      < 1 year :242        
+##  other             : 709    RENT    :1087      2 years  :240        
+##                                                3 years  :230        
+##                                                5 years  :193        
+##                                                4 years  :187        
+##                                                (Other)  :628        
+##  Revolving.CREDIT.Balance.log
+##  Min.   : 0.00               
+##  1st Qu.: 8.62               
+##  Median : 9.30               
+##  Mean   : 9.02               
+##  3rd Qu.: 9.85               
+##  Max.   :12.51               
+## 
 ```
 
 ```r
@@ -242,57 +242,56 @@ summary(flm)
 ## 
 ## Residuals:
 ##    Min     1Q Median     3Q    Max 
-## -9.258 -1.286 -0.142  1.147  9.498 
+## -9.734 -1.284 -0.132  1.168  9.471 
 ## 
 ## Coefficients:
 ##                                     Estimate Std. Error t value Pr(>|t|)
-## (Intercept)                         6.78e+01   2.86e+00   23.68  < 2e-16
-## Amount.Requested                    4.23e-05   2.94e-05    1.44   0.1495
-## Amount.Funded.By.Investors          1.29e-04   3.02e-05    4.25  2.3e-05
-## Loan.Length                         1.32e-01   5.49e-03   24.06  < 2e-16
-## Debt.To.Income.Ratio               -1.75e-02   8.09e-03   -2.16   0.0311
-## Open.CREDIT.Lines                  -1.54e-02   1.56e-02   -0.99   0.3230
-## Revolving.CREDIT.Balance            2.20e-06   3.13e-06    0.70   0.4823
-## Inquiries.in.the.Last.6.Months      3.62e-01   4.22e-02    8.57  < 2e-16
-## Issued.Date                         2.69e-04   1.51e-04    1.78   0.0755
-## Earliest.CREDIT.Line               -4.60e-05   2.40e-05   -1.92   0.0554
-## Total.CREDIT.Lines                 -6.01e-04   6.81e-03   -0.09   0.9297
-## State.Region02                     -1.28e-01   2.36e-01   -0.54   0.5872
-## State.Region03                     -7.29e-02   2.49e-01   -0.29   0.7698
-## State.Region04                      7.18e-02   2.32e-01    0.31   0.7567
-## State.Region05                     -1.22e-01   2.49e-01   -0.49   0.6250
-## State.Region06                      3.76e-01   2.54e-01    1.48   0.1386
-## State.Region07                      3.17e-01   3.94e-01    0.80   0.4214
-## State.Region08                     -1.24e-01   3.39e-01   -0.37   0.7148
-## State.Region09                     -5.69e-03   2.25e-01   -0.03   0.9799
-## State.Region10                      2.75e-01   3.22e-01    0.85   0.3927
-## FICO.num                           -8.80e-02   1.54e-03  -57.23  < 2e-16
-## Monthly.Income.Log                 -4.86e-01   1.30e-01   -3.73   0.0002
-## Loan.Purpose.Moddebt_consolidation  2.46e-01   1.39e-01    1.77   0.0767
-## Loan.Purpose.Modother               7.14e-01   1.57e-01    4.56  5.6e-06
-## Home.Ownership.ModOWN               5.82e-01   1.93e-01    3.02   0.0026
-## Home.Ownership.ModRENT              3.30e-01   1.18e-01    2.80   0.0051
-## Employment.Length.Mod.L             1.78e-01   1.95e-01    0.92   0.3601
-## Employment.Length.Mod.Q            -1.80e-01   1.64e-01   -1.10   0.2720
-## Employment.Length.Mod.C            -1.17e-02   1.70e-01   -0.07   0.9452
-## Employment.Length.Mod^4             1.54e-01   1.92e-01    0.80   0.4244
-## Employment.Length.Mod^5            -1.14e-01   2.09e-01   -0.55   0.5854
-## Employment.Length.Mod^6            -4.23e-02   2.11e-01   -0.20   0.8410
-## Employment.Length.Mod^7             7.54e-02   2.01e-01    0.37   0.7081
-## Employment.Length.Mod^8             1.08e-01   1.94e-01    0.56   0.5767
-## Employment.Length.Mod^9            -2.44e-01   1.87e-01   -1.31   0.1916
-## Employment.Length.Mod^10           -2.98e-02   1.78e-01   -0.17   0.8667
+## (Intercept)                         6.95e+01   2.86e+00   24.26  < 2e-16
+## Amount.Requested                    5.17e-05   2.92e-05    1.77  0.07707
+## Amount.Funded.By.Investors          1.25e-04   3.00e-05    4.17  3.2e-05
+## Loan.Length                         1.32e-01   5.45e-03   24.16  < 2e-16
+## Debt.To.Income.Ratio               -9.77e-03   7.99e-03   -1.22  0.22111
+## Open.CREDIT.Lines                  -4.14e-03   1.56e-02   -0.27  0.79000
+## Inquiries.in.the.Last.6.Months      3.43e-01   4.20e-02    8.17  6.0e-16
+## Issued.Date                         2.47e-04   1.49e-04    1.65  0.09827
+## Earliest.CREDIT.Line               -4.72e-05   2.38e-05   -1.98  0.04732
+## Total.CREDIT.Lines                 -9.08e-04   6.76e-03   -0.13  0.89318
+## State.Region02                     -1.23e-01   2.35e-01   -0.52  0.60078
+## State.Region03                     -1.38e-01   2.47e-01   -0.56  0.57839
+## State.Region04                      4.73e-02   2.30e-01    0.21  0.83719
+## State.Region05                     -1.82e-01   2.47e-01   -0.74  0.46065
+## State.Region06                      3.44e-01   2.52e-01    1.37  0.17200
+## State.Region07                      2.83e-01   3.91e-01    0.72  0.46863
+## State.Region08                     -1.45e-01   3.36e-01   -0.43  0.66583
+## State.Region09                     -2.78e-02   2.24e-01   -0.12  0.90132
+## State.Region10                      2.44e-01   3.19e-01    0.76  0.44498
+## FICO.num                           -8.91e-02   1.54e-03  -57.79  < 2e-16
+## Monthly.Income.Log                 -3.75e-01   1.26e-01   -2.97  0.00301
+## Loan.Purpose.Moddebt_consolidation  1.97e-01   1.37e-01    1.44  0.15128
+## Loan.Purpose.Modother               5.78e-01   1.57e-01    3.68  0.00024
+## Home.Ownership.ModOWN               5.51e-01   1.91e-01    2.88  0.00407
+## Home.Ownership.ModRENT              2.61e-01   1.17e-01    2.23  0.02582
+## Employment.Length.Mod.L             1.91e-01   1.93e-01    0.99  0.32234
+## Employment.Length.Mod.Q            -1.45e-01   1.63e-01   -0.89  0.37334
+## Employment.Length.Mod.C            -1.31e-02   1.69e-01   -0.08  0.93815
+## Employment.Length.Mod^4             1.74e-01   1.91e-01    0.91  0.36046
+## Employment.Length.Mod^5            -1.07e-01   2.07e-01   -0.52  0.60617
+## Employment.Length.Mod^6            -3.29e-02   2.09e-01   -0.16  0.87484
+## Employment.Length.Mod^7             6.59e-02   2.00e-01    0.33  0.74176
+## Employment.Length.Mod^8             9.81e-02   1.93e-01    0.51  0.61083
+## Employment.Length.Mod^9            -2.42e-01   1.85e-01   -1.31  0.19162
+## Employment.Length.Mod^10           -2.35e-02   1.76e-01   -0.13  0.89374
+## Revolving.CREDIT.Balance.log       -1.76e-01   3.63e-02   -4.86  1.3e-06
 ##                                       
 ## (Intercept)                        ***
-## Amount.Requested                      
+## Amount.Requested                   .  
 ## Amount.Funded.By.Investors         ***
 ## Loan.Length                        ***
-## Debt.To.Income.Ratio               *  
+## Debt.To.Income.Ratio                  
 ## Open.CREDIT.Lines                     
-## Revolving.CREDIT.Balance              
 ## Inquiries.in.the.Last.6.Months     ***
 ## Issued.Date                        .  
-## Earliest.CREDIT.Line               .  
+## Earliest.CREDIT.Line               *  
 ## Total.CREDIT.Lines                    
 ## State.Region02                        
 ## State.Region03                        
@@ -304,11 +303,11 @@ summary(flm)
 ## State.Region09                        
 ## State.Region10                        
 ## FICO.num                           ***
-## Monthly.Income.Log                 ***
-## Loan.Purpose.Moddebt_consolidation .  
+## Monthly.Income.Log                 ** 
+## Loan.Purpose.Moddebt_consolidation    
 ## Loan.Purpose.Modother              ***
 ## Home.Ownership.ModOWN              ** 
-## Home.Ownership.ModRENT             ** 
+## Home.Ownership.ModRENT             *  
 ## Employment.Length.Mod.L               
 ## Employment.Length.Mod.Q               
 ## Employment.Length.Mod.C               
@@ -319,12 +318,13 @@ summary(flm)
 ## Employment.Length.Mod^8               
 ## Employment.Length.Mod^9               
 ## Employment.Length.Mod^10              
+## Revolving.CREDIT.Balance.log       ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 1.99 on 1591 degrees of freedom
-## Multiple R-squared:  0.774,	Adjusted R-squared:  0.769 
-## F-statistic:  156 on 35 and 1591 DF,  p-value: <2e-16
+## Residual standard error: 1.97 on 1591 degrees of freedom
+## Multiple R-squared:  0.777,	Adjusted R-squared:  0.773 
+## F-statistic:  159 on 35 and 1591 DF,  p-value: <2e-16
 ```
 
 ```r
@@ -339,28 +339,28 @@ drop1(flm)
 ## Model:
 ## Interest.Rate ~ Amount.Requested + Amount.Funded.By.Investors + 
 ##     Loan.Length + Debt.To.Income.Ratio + Open.CREDIT.Lines + 
-##     Revolving.CREDIT.Balance + Inquiries.in.the.Last.6.Months + 
-##     Issued.Date + Earliest.CREDIT.Line + Total.CREDIT.Lines + 
-##     State.Region + FICO.num + Monthly.Income.Log + Loan.Purpose.Mod + 
-##     Home.Ownership.Mod + Employment.Length.Mod
+##     Inquiries.in.the.Last.6.Months + Issued.Date + Earliest.CREDIT.Line + 
+##     Total.CREDIT.Lines + State.Region + FICO.num + Monthly.Income.Log + 
+##     Loan.Purpose.Mod + Home.Ownership.Mod + Employment.Length.Mod + 
+##     Revolving.CREDIT.Balance.log
 ##                                Df Sum of Sq   RSS  AIC
-## <none>                                       6274 2268
-## Amount.Requested                1         8  6282 2268
-## Amount.Funded.By.Investors      1        71  6345 2284
-## Loan.Length                     1      2282  8556 2771
-## Debt.To.Income.Ratio            1        18  6292 2271
-## Open.CREDIT.Lines               1         4  6277 2267
-## Revolving.CREDIT.Balance        1         2  6276 2266
-## Inquiries.in.the.Last.6.Months  1       290  6563 2339
-## Issued.Date                     1        12  6286 2269
-## Earliest.CREDIT.Line            1        14  6288 2270
-## Total.CREDIT.Lines              1         0  6274 2266
-## State.Region                    9        39  6312 2260
-## FICO.num                        1     12916 19189 4085
-## Monthly.Income.Log              1        55  6328 2280
-## Loan.Purpose.Mod                2        93  6367 2288
-## Home.Ownership.Mod              2        51  6324 2277
-## Employment.Length.Mod          10        23  6296 2254
+## <none>                                       6184 2244
+## Amount.Requested                1        12  6196 2246
+## Amount.Funded.By.Investors      1        68  6251 2260
+## Loan.Length                     1      2270  8453 2751
+## Debt.To.Income.Ratio            1         6  6190 2244
+## Open.CREDIT.Lines               1         0  6184 2242
+## Inquiries.in.the.Last.6.Months  1       260  6443 2309
+## Issued.Date                     1        11  6194 2245
+## Earliest.CREDIT.Line            1        15  6199 2246
+## Total.CREDIT.Lines              1         0  6184 2242
+## State.Region                    9        39  6223 2237
+## FICO.num                        1     12983 19166 4083
+## Monthly.Income.Log              1        34  6218 2251
+## Loan.Purpose.Mod                2        60  6244 2256
+## Home.Ownership.Mod              2        39  6223 2251
+## Employment.Length.Mod          10        22  6206 2230
+## Revolving.CREDIT.Balance.log    1        92  6276 2266
 ```
 
 ```r
@@ -376,49 +376,52 @@ summary(flm.aic)
 ## lm(formula = Interest.Rate ~ Amount.Requested + Amount.Funded.By.Investors + 
 ##     Loan.Length + Debt.To.Income.Ratio + Inquiries.in.the.Last.6.Months + 
 ##     Issued.Date + Earliest.CREDIT.Line + FICO.num + Monthly.Income.Log + 
-##     Loan.Purpose.Mod + Home.Ownership.Mod, data = data)
+##     Loan.Purpose.Mod + Home.Ownership.Mod + Revolving.CREDIT.Balance.log, 
+##     data = data)
 ## 
 ## Residuals:
 ##    Min     1Q Median     3Q    Max 
-## -9.332 -1.326 -0.135  1.147  9.705 
+## -9.815 -1.292 -0.128  1.192  9.680 
 ## 
 ## Coefficients:
 ##                                     Estimate Std. Error t value Pr(>|t|)
-## (Intercept)                         6.81e+01   2.80e+00   24.29  < 2e-16
-## Amount.Requested                    4.24e-05   2.91e-05    1.46   0.1458
-## Amount.Funded.By.Investors          1.30e-04   3.00e-05    4.32  1.6e-05
-## Loan.Length                         1.32e-01   5.43e-03   24.34  < 2e-16
-## Debt.To.Income.Ratio               -1.93e-02   7.15e-03   -2.70   0.0069
-## Inquiries.in.the.Last.6.Months      3.52e-01   4.13e-02    8.53  < 2e-16
-## Issued.Date                         2.76e-04   1.47e-04    1.88   0.0605
-## Earliest.CREDIT.Line               -4.76e-05   2.23e-05   -2.14   0.0328
-## FICO.num                           -8.82e-02   1.52e-03  -57.99  < 2e-16
-## Monthly.Income.Log                 -5.14e-01   1.16e-01   -4.41  1.1e-05
-## Loan.Purpose.Moddebt_consolidation  2.40e-01   1.37e-01    1.75   0.0804
-## Loan.Purpose.Modother               6.99e-01   1.54e-01    4.54  6.1e-06
-## Home.Ownership.ModOWN               5.40e-01   1.89e-01    2.85   0.0044
-## Home.Ownership.ModRENT              2.76e-01   1.10e-01    2.51   0.0122
+## (Intercept)                         6.95e+01   2.80e+00   24.84  < 2e-16
+## Amount.Requested                    5.20e-05   2.90e-05    1.79  0.07323
+## Amount.Funded.By.Investors          1.25e-04   2.98e-05    4.21  2.7e-05
+## Loan.Length                         1.32e-01   5.39e-03   24.44  < 2e-16
+## Debt.To.Income.Ratio               -1.05e-02   7.32e-03   -1.44  0.15000
+## Inquiries.in.the.Last.6.Months      3.38e-01   4.11e-02    8.23  3.9e-16
+## Issued.Date                         2.76e-04   1.46e-04    1.89  0.05882
+## Earliest.CREDIT.Line               -5.11e-05   2.21e-05   -2.31  0.02106
+## FICO.num                           -8.93e-02   1.53e-03  -58.52  < 2e-16
+## Monthly.Income.Log                 -4.01e-01   1.18e-01   -3.41  0.00068
+## Loan.Purpose.Moddebt_consolidation  1.98e-01   1.36e-01    1.45  0.14694
+## Loan.Purpose.Modother               5.62e-01   1.55e-01    3.62  0.00031
+## Home.Ownership.ModOWN               5.14e-01   1.88e-01    2.73  0.00634
+## Home.Ownership.ModRENT              2.11e-01   1.10e-01    1.92  0.05550
+## Revolving.CREDIT.Balance.log       -1.78e-01   3.56e-02   -4.99  6.7e-07
 ##                                       
 ## (Intercept)                        ***
-## Amount.Requested                      
+## Amount.Requested                   .  
 ## Amount.Funded.By.Investors         ***
 ## Loan.Length                        ***
-## Debt.To.Income.Ratio               ** 
+## Debt.To.Income.Ratio                  
 ## Inquiries.in.the.Last.6.Months     ***
 ## Issued.Date                        .  
 ## Earliest.CREDIT.Line               *  
 ## FICO.num                           ***
 ## Monthly.Income.Log                 ***
-## Loan.Purpose.Moddebt_consolidation .  
+## Loan.Purpose.Moddebt_consolidation    
 ## Loan.Purpose.Modother              ***
 ## Home.Ownership.ModOWN              ** 
-## Home.Ownership.ModRENT             *  
+## Home.Ownership.ModRENT             .  
+## Revolving.CREDIT.Balance.log       ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 1.98 on 1613 degrees of freedom
-## Multiple R-squared:  0.772,	Adjusted R-squared:  0.77 
-## F-statistic:  420 on 13 and 1613 DF,  p-value: <2e-16
+## Residual standard error: 1.97 on 1612 degrees of freedom
+## Multiple R-squared:  0.775,	Adjusted R-squared:  0.773 
+## F-statistic:  397 on 14 and 1612 DF,  p-value: <2e-16
 ```
 
 ```r
@@ -462,17 +465,17 @@ anova(small, flm.aic, flm)
 ## Model 2: Interest.Rate ~ Amount.Requested + Amount.Funded.By.Investors + 
 ##     Loan.Length + Debt.To.Income.Ratio + Inquiries.in.the.Last.6.Months + 
 ##     Issued.Date + Earliest.CREDIT.Line + FICO.num + Monthly.Income.Log + 
-##     Loan.Purpose.Mod + Home.Ownership.Mod
+##     Loan.Purpose.Mod + Home.Ownership.Mod + Revolving.CREDIT.Balance.log
 ## Model 3: Interest.Rate ~ Amount.Requested + Amount.Funded.By.Investors + 
 ##     Loan.Length + Debt.To.Income.Ratio + Open.CREDIT.Lines + 
-##     Revolving.CREDIT.Balance + Inquiries.in.the.Last.6.Months + 
-##     Issued.Date + Earliest.CREDIT.Line + Total.CREDIT.Lines + 
-##     State.Region + FICO.num + Monthly.Income.Log + Loan.Purpose.Mod + 
-##     Home.Ownership.Mod + Employment.Length.Mod
+##     Inquiries.in.the.Last.6.Months + Issued.Date + Earliest.CREDIT.Line + 
+##     Total.CREDIT.Lines + State.Region + FICO.num + Monthly.Income.Log + 
+##     Loan.Purpose.Mod + Home.Ownership.Mod + Employment.Length.Mod + 
+##     Revolving.CREDIT.Balance.log
 ##   Res.Df   RSS Df Sum of Sq      F Pr(>F)    
 ## 1   1625 13921                               
-## 2   1613  6340 12      7581 160.22 <2e-16 ***
-## 3   1591  6274 22        66   0.77   0.77    
+## 2   1612  6243 13      7678 151.95 <2e-16 ***
+## 3   1591  6184 21        60   0.73    0.8    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -493,80 +496,140 @@ data[hatvalues(flm.aic) > 0.03, ]
 
 ```
 ##      Amount.Requested Amount.Funded.By.Investors Interest.Rate Loan.Length
+## 43               5500                     5500.0         19.13          36
 ## 76               6725                      825.0         13.12          36
 ## 133             24625                      917.3         14.07          36
 ## 236             20000                     2050.0         12.84          36
 ## 523             14700                     1973.8         12.29          36
+## 571              3000                     3000.0         22.11          60
 ## 701             21000                     6165.3         11.09          36
 ## 834             24000                     7100.0         11.12          60
+## 1064             2800                     2800.0         14.17          36
+## 1195             3000                     3000.0         19.99          60
 ## 1242            35000                    14869.5         15.65          60
+## 1305            10000                      525.0         14.70          36
+## 1342             8000                     7950.0          5.79          36
 ## 1413            20000                     6350.0         16.71          36
 ## 1464            25000                    11696.9         12.84          36
+## 1473            10375                    10375.0          7.90          36
+## 1512            19125                    19125.0         10.16          36
 ## 1669            24000                     9675.0         17.15          36
 ## 1769            22350                      486.1         14.07          36
 ## 1965            30000                    17982.9         17.88          60
+## 2048            30000                    30000.0         13.11          60
+## 2133            28000                    27950.0         13.11          60
+## 2241            10000                     9999.4         10.75          60
 ## 2323             2500                     2125.0         12.92          36
+## 2336             1800                     1800.0         16.02          36
 ## 2383             8500                     6727.4         16.83          36
-##      Debt.To.Income.Ratio Open.CREDIT.Lines Revolving.CREDIT.Balance
-## 76                  13.16                10                     5513
-## 133                 12.81                14                    33698
-## 236                  1.49                 6                     1954
-## 523                 21.94                14                    14694
-## 701                 21.28                31                   270800
-## 834                 11.99                 6                     1726
-## 1242                26.19                14                    34883
-## 1413                20.83                11                    11881
-## 1464                 5.52                 9                     1900
-## 1669                12.70                14                    40099
-## 1769                 3.66                 8                    10753
-## 1965                24.36                10                    24217
-## 2323                22.32                21                     4744
-## 2383                14.68                 9                        0
-##      Inquiries.in.the.Last.6.Months Issued.Date Earliest.CREDIT.Line
-## 76                                9  2007-07-08           1991-05-13
-## 133                               0  2007-12-21           1993-04-24
-## 236                               5  2009-04-28           1998-08-10
-## 523                               2  2008-03-05           2002-10-19
-## 701                               5  2008-01-10           1984-02-01
-## 834                               2  2010-07-15           2001-02-17
-## 1242                              0  2011-04-29           1990-04-05
-## 1413                              4  2008-03-13           1999-03-20
-## 1464                              4  2009-02-12           1985-06-14
-## 1669                              6  2008-11-10           2000-02-09
-## 1769                              2  2007-12-26           1992-02-04
-## 1965                              0  2011-04-29           2003-05-11
-## 2323                              9  2008-03-28           1990-09-22
-## 2383                              9  2008-11-17           1977-04-20
-##      Total.CREDIT.Lines State.Region FICO.num Monthly.Income.Log
-## 76                   32           07      672              8.517
-## 133                  24           02      677              9.210
-## 236                  14           05      752              8.161
-## 523                  18           01      702              8.039
-## 701                  61           09      747              9.816
-## 834                  20           08      777              8.646
-## 1242                 30           04      737              8.750
-## 1413                 16           02      662              8.582
-## 1464                 35           05      762              9.067
-## 1669                 31           04      672              9.825
-## 1769                 15           02      672              9.328
-## 1965                 21           02      692              8.636
-## 2323                 35           05      672              8.230
-## 2383                 17           05      682              8.517
-##        Loan.Purpose.Mod Home.Ownership.Mod Employment.Length.Mod
-## 76   debt_consolidation           MORTGAGE             10+ years
-## 133         credit_card           MORTGAGE               8 years
-## 236               other           MORTGAGE               2 years
-## 523  debt_consolidation               RENT               8 years
-## 701               other                OWN               2 years
-## 834               other                OWN               2 years
-## 1242              other           MORTGAGE             10+ years
-## 1413 debt_consolidation               RENT                1 year
-## 1464              other           MORTGAGE             10+ years
-## 1669 debt_consolidation               RENT               5 years
-## 1769              other                OWN                1 year
-## 1965              other               RENT               5 years
-## 2323 debt_consolidation           MORTGAGE               7 years
-## 2383 debt_consolidation               RENT             10+ years
+##      Debt.To.Income.Ratio Open.CREDIT.Lines Inquiries.in.the.Last.6.Months
+## 43                   3.58                 2                              1
+## 76                  13.16                10                              9
+## 133                 12.81                14                              0
+## 236                  1.49                 6                              5
+## 523                 21.94                14                              2
+## 571                  0.00                 3                              0
+## 701                 21.28                31                              5
+## 834                 11.99                 6                              2
+## 1064                 0.00                 3                              2
+## 1195                19.63                 4                              1
+## 1242                26.19                14                              0
+## 1305                 6.37                 4                              6
+## 1342                19.65                 8                              0
+## 1413                20.83                11                              4
+## 1464                 5.52                 9                              4
+## 1473                27.64                 7                              0
+## 1512                25.58                 5                              0
+## 1669                12.70                14                              6
+## 1769                 3.66                 8                              2
+## 1965                24.36                10                              0
+## 2048                16.32                 6                              0
+## 2133                 0.00                 6                              1
+## 2241                 4.05                 7                              1
+## 2323                22.32                21                              9
+## 2336                 4.19                 2                              0
+## 2383                14.68                 9                              9
+##      Issued.Date Earliest.CREDIT.Line Total.CREDIT.Lines State.Region
+## 43    2009-10-06           1995-09-07                  6           03
+## 76    2007-07-08           1991-05-13                 32           07
+## 133   2007-12-21           1993-04-24                 24           02
+## 236   2009-04-28           1998-08-10                 14           05
+## 523   2008-03-05           2002-10-19                 18           01
+## 571   2011-07-07           2008-01-19                  5           05
+## 701   2008-01-10           1984-02-01                 61           09
+## 834   2010-07-15           2001-02-17                 20           08
+## 1064  2011-04-20           1983-03-04                 13           03
+## 1195  2012-06-13           1983-02-12                 29           03
+## 1242  2011-04-29           1990-04-05                 30           04
+## 1305  2007-07-15           2002-04-16                  5           04
+## 1342  2010-11-30           2002-10-31                 22           04
+## 1413  2008-03-13           1999-03-20                 16           02
+## 1464  2009-02-12           1985-06-14                 35           05
+## 1473  2012-11-05           1999-02-06                 13           03
+## 1512  2012-09-04           1994-11-25                 20           04
+## 1669  2008-11-10           2000-02-09                 31           04
+## 1769  2007-12-26           1992-02-04                 15           02
+## 1965  2011-04-29           2003-05-11                 21           02
+## 2048  2012-08-02           1999-09-12                 20           09
+## 2133  2012-04-02           1990-08-11                 10           08
+## 2241  2010-07-29           1990-05-10                 38           03
+## 2323  2008-03-28           1990-09-22                 35           05
+## 2336  2011-04-28           1988-01-26                 32           04
+## 2383  2008-11-17           1977-04-20                 17           05
+##      FICO.num Monthly.Income.Log   Loan.Purpose.Mod Home.Ownership.Mod
+## 43        662              9.393        credit_card               RENT
+## 76        672              8.517 debt_consolidation           MORTGAGE
+## 133       677              9.210        credit_card           MORTGAGE
+## 236       752              8.161              other           MORTGAGE
+## 523       702              8.039 debt_consolidation               RENT
+## 571       692              7.294              other                OWN
+## 701       747              9.816              other                OWN
+## 834       777              8.646              other                OWN
+## 1064      682              8.148 debt_consolidation           MORTGAGE
+## 1195      712              8.393              other           MORTGAGE
+## 1242      737              8.750              other           MORTGAGE
+## 1305      647              8.597        credit_card               RENT
+## 1342      772              8.671              other                OWN
+## 1413      662              8.582 debt_consolidation               RENT
+## 1464      762              9.067              other           MORTGAGE
+## 1473      747              8.412 debt_consolidation           MORTGAGE
+## 1512      727              8.294 debt_consolidation               RENT
+## 1669      672              9.825 debt_consolidation               RENT
+## 1769      672              9.328              other                OWN
+## 1965      692              8.636              other               RENT
+## 2048      757              9.924              other               RENT
+## 2133      797              8.478              other               RENT
+## 2241      797              9.077              other           MORTGAGE
+## 2323      672              8.230 debt_consolidation           MORTGAGE
+## 2336      662              8.354              other               RENT
+## 2383      682              8.517 debt_consolidation               RENT
+##      Employment.Length.Mod Revolving.CREDIT.Balance.log
+## 43                 8 years                        0.000
+## 76               10+ years                        8.615
+## 133                8 years                       10.425
+## 236                2 years                        7.578
+## 523                8 years                        9.595
+## 571                6 years                        0.000
+## 701                2 years                       12.509
+## 834                2 years                        7.454
+## 1064             10+ years                        0.000
+## 1195               5 years                        0.000
+## 1242             10+ years                       10.460
+## 1305              < 1 year                        7.702
+## 1342               3 years                        0.000
+## 1413                1 year                        9.383
+## 1464             10+ years                        7.550
+## 1473               5 years                        0.000
+## 1512               5 years                        0.000
+## 1669               5 years                       10.599
+## 1769                1 year                        9.283
+## 1965               5 years                       10.095
+## 2048               2 years                        0.000
+## 2133               4 years                        0.000
+## 2241               2 years                        0.000
+## 2323               7 years                        8.465
+## 2336               9 years                        0.000
+## 2383             10+ years                        0.000
 ```
 
 
@@ -593,7 +656,7 @@ cv.flmaic
 ```
 ## 10-fold CV results:
 ##    CV 
-## 1.993
+## 1.979
 ```
 
 ```r
@@ -602,7 +665,7 @@ cv.flmaic$se
 
 ```
 ##       CV 
-## 0.001444
+## 0.001352
 ```
 
 
@@ -624,23 +687,23 @@ rf$importance
 ```
 
 ```
-##                                  %IncMSE IncNodePurity
-## Amount.Requested                1.426341        1613.5
-## Amount.Funded.By.Investors      1.780852        1950.3
-## Loan.Length                     3.989360        3245.9
-## Debt.To.Income.Ratio            0.126713         652.3
-## Open.CREDIT.Lines               0.256897         660.9
-## Revolving.CREDIT.Balance        0.152837         704.7
-## Inquiries.in.the.Last.6.Months  0.479467         611.9
-## Issued.Date                     0.771478        1451.8
-## Earliest.CREDIT.Line            0.067815         590.7
-## Total.CREDIT.Lines              0.110523         584.6
-## State.Region                   -0.006018         822.0
-## FICO.num                       17.584790       13292.7
-## Monthly.Income.Log              0.095690         516.6
-## Loan.Purpose.Mod                0.049812         155.9
-## Home.Ownership.Mod              0.057561         172.4
-## Employment.Length.Mod           0.017095         239.2
+##                                 %IncMSE IncNodePurity
+## Amount.Requested                1.38958        1532.9
+## Amount.Funded.By.Investors      1.83275        2045.1
+## Loan.Length                     4.04578        3361.6
+## Debt.To.Income.Ratio            0.12642         637.0
+## Open.CREDIT.Lines               0.24690         662.5
+## Inquiries.in.the.Last.6.Months  0.45421         594.0
+## Issued.Date                     0.77686        1428.5
+## Earliest.CREDIT.Line            0.06521         595.5
+## Total.CREDIT.Lines              0.13215         566.2
+## State.Region                    0.00134         813.0
+## FICO.num                       17.55914       13293.7
+## Monthly.Income.Log              0.13000         518.7
+## Loan.Purpose.Mod                0.03095         164.5
+## Home.Ownership.Mod              0.05365         161.3
+## Employment.Length.Mod           0.01534         240.7
+## Revolving.CREDIT.Balance.log    0.17690         696.3
 ```
 
 ```r
@@ -649,21 +712,21 @@ rf$importanceSD
 
 ```
 ##               Amount.Requested     Amount.Funded.By.Investors 
-##                        0.07747                        0.09013 
+##                        0.07362                        0.08969 
 ##                    Loan.Length           Debt.To.Income.Ratio 
-##                        0.08241                        0.02615 
-##              Open.CREDIT.Lines       Revolving.CREDIT.Balance 
-##                        0.02159                        0.03065 
-## Inquiries.in.the.Last.6.Months                    Issued.Date 
-##                        0.03091                        0.04094 
-##           Earliest.CREDIT.Line             Total.CREDIT.Lines 
-##                        0.02373                        0.02171 
-##                   State.Region                       FICO.num 
-##                        0.02491                        0.15995 
-##             Monthly.Income.Log               Loan.Purpose.Mod 
-##                        0.02387                        0.01432 
-##             Home.Ownership.Mod          Employment.Length.Mod 
-##                        0.01698                        0.01464
+##                        0.08193                        0.02788 
+##              Open.CREDIT.Lines Inquiries.in.the.Last.6.Months 
+##                        0.02429                        0.02864 
+##                    Issued.Date           Earliest.CREDIT.Line 
+##                        0.04092                        0.02461 
+##             Total.CREDIT.Lines                   State.Region 
+##                        0.02509                        0.02684 
+##                       FICO.num             Monthly.Income.Log 
+##                        0.16857                        0.02345 
+##               Loan.Purpose.Mod             Home.Ownership.Mod 
+##                        0.01447                        0.01529 
+##          Employment.Length.Mod   Revolving.CREDIT.Balance.log 
+##                        0.01455                        0.03137
 ```
 
 ```r
@@ -683,22 +746,22 @@ rf.used
 
 ```
 ##                               Var  Used
-## 1                Amount.Requested 29074
-## 2      Amount.Funded.By.Investors 32307
-## 3                     Loan.Length  5294
-## 4            Debt.To.Income.Ratio 31762
-## 5               Open.CREDIT.Lines 27337
-## 6        Revolving.CREDIT.Balance 32085
-## 7  Inquiries.in.the.Last.6.Months 13787
-## 8                     Issued.Date 42061
-## 9            Earliest.CREDIT.Line 31215
-## 10             Total.CREDIT.Lines 29283
-## 11                   State.Region 39024
-## 12                       FICO.num 40123
-## 13             Monthly.Income.Log 30091
-## 14               Loan.Purpose.Mod 10867
-## 15             Home.Ownership.Mod 10177
-## 16          Employment.Length.Mod 19791
+## 1                Amount.Requested 29402
+## 2      Amount.Funded.By.Investors 32247
+## 3                     Loan.Length  5105
+## 4            Debt.To.Income.Ratio 32061
+## 5               Open.CREDIT.Lines 27214
+## 6  Inquiries.in.the.Last.6.Months 13903
+## 7                     Issued.Date 42150
+## 8            Earliest.CREDIT.Line 31655
+## 9              Total.CREDIT.Lines 29415
+## 10                   State.Region 38647
+## 11                       FICO.num 40197
+## 12             Monthly.Income.Log 30095
+## 13               Loan.Purpose.Mod 11064
+## 14             Home.Ownership.Mod 10126
+## 15          Employment.Length.Mod 19950
+## 16   Revolving.CREDIT.Balance.log 31864
 ```
 
 ```r
@@ -710,10 +773,10 @@ e.rf
 
 ```
 ## $rmspe
-## [1] 1.592
+## [1] 1.591
 ## 
 ## $se
-## [1] 0.05727
+## [1] 0.05723
 ```
 
 ```r
@@ -738,7 +801,7 @@ varsToUse
 ## [1] "FICO.num"                       "Loan.Length"                   
 ## [3] "Amount.Funded.By.Investors"     "Amount.Requested"              
 ## [5] "Issued.Date"                    "Inquiries.in.the.Last.6.Months"
-## [7] "Open.CREDIT.Lines"              "Revolving.CREDIT.Balance"
+## [7] "Open.CREDIT.Lines"              "Revolving.CREDIT.Balance.log"
 ```
 
 ```r
@@ -751,7 +814,8 @@ flm.aic$call
 ## lm(formula = Interest.Rate ~ Amount.Requested + Amount.Funded.By.Investors + 
 ##     Loan.Length + Debt.To.Income.Ratio + Inquiries.in.the.Last.6.Months + 
 ##     Issued.Date + Earliest.CREDIT.Line + FICO.num + Monthly.Income.Log + 
-##     Loan.Purpose.Mod + Home.Ownership.Mod, data = data)
+##     Loan.Purpose.Mod + Home.Ownership.Mod + Revolving.CREDIT.Balance.log, 
+##     data = data)
 ```
 
 ```r
@@ -761,14 +825,14 @@ paste(varsToUse, collapse = " + ")  # To get the vars
 ```
 
 ```
-## [1] "FICO.num + Loan.Length + Amount.Funded.By.Investors + Amount.Requested + Issued.Date + Inquiries.in.the.Last.6.Months + Open.CREDIT.Lines + Revolving.CREDIT.Balance"
+## [1] "FICO.num + Loan.Length + Amount.Funded.By.Investors + Amount.Requested + Issued.Date + Inquiries.in.the.Last.6.Months + Open.CREDIT.Lines + Revolving.CREDIT.Balance.log"
 ```
 
 ```r
 rf2 <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% 
     randomForest(Interest.Rate ~ FICO.num + Loan.Length + Amount.Funded.By.Investors + 
         Amount.Requested + Issued.Date + Inquiries.in.the.Last.6.Months + Open.CREDIT.Lines + 
-        Revolving.CREDIT.Balance, data = data, importance = TRUE, keep.forest = TRUE, 
+        Revolving.CREDIT.Balance.log, data = data, importance = TRUE, keep.forest = TRUE, 
         ntree = ntree, xtest = edata[, which(colnames(edata) %in% varsToUse)], 
         ytest = edata$Interest.Rate)
 
@@ -778,14 +842,14 @@ rf2$importance
 
 ```
 ##                                %IncMSE IncNodePurity
-## FICO.num                       17.3698       12981.6
-## Loan.Length                     4.0683        3272.2
-## Amount.Funded.By.Investors      2.4278        2415.4
-## Amount.Requested                2.0565        2120.2
-## Issued.Date                     1.0829        2177.2
-## Inquiries.in.the.Last.6.Months  0.6584         883.7
-## Open.CREDIT.Lines               0.4542        1285.6
-## Revolving.CREDIT.Balance        0.2538        1467.9
+## FICO.num                       17.5329       13222.2
+## Loan.Length                     3.9575        3123.5
+## Amount.Funded.By.Investors      2.3461        2453.1
+## Amount.Requested                1.8993        2052.3
+## Issued.Date                     1.0342        2145.3
+## Inquiries.in.the.Last.6.Months  0.6364         886.9
+## Open.CREDIT.Lines               0.4774        1275.3
+## Revolving.CREDIT.Balance.log    0.2761        1385.9
 ```
 
 ```r
@@ -794,13 +858,13 @@ rf2$importanceSD
 
 ```
 ##                       FICO.num                    Loan.Length 
-##                        0.26519                        0.10893 
+##                        0.25889                        0.11555 
 ##     Amount.Funded.By.Investors               Amount.Requested 
-##                        0.18962                        0.13215 
+##                        0.17640                        0.12282 
 ##                    Issued.Date Inquiries.in.the.Last.6.Months 
-##                        0.07513                        0.05184 
-##              Open.CREDIT.Lines       Revolving.CREDIT.Balance 
-##                        0.04533                        0.05806
+##                        0.06504                        0.04808 
+##              Open.CREDIT.Lines   Revolving.CREDIT.Balance.log 
+##                        0.04773                        0.05532
 ```
 
 ```r
@@ -820,22 +884,22 @@ rf2.used
 
 ```
 ##                               Var  Used
-## 1                Amount.Requested 29074
-## 2      Amount.Funded.By.Investors 32307
-## 3                     Loan.Length  5294
-## 4            Debt.To.Income.Ratio 31762
-## 5               Open.CREDIT.Lines 27337
-## 6        Revolving.CREDIT.Balance 32085
-## 7  Inquiries.in.the.Last.6.Months 13787
-## 8                     Issued.Date 42061
-## 9            Earliest.CREDIT.Line 31215
-## 10             Total.CREDIT.Lines 29283
-## 11                   State.Region 39024
-## 12                       FICO.num 40123
-## 13             Monthly.Income.Log 30091
-## 14               Loan.Purpose.Mod 10867
-## 15             Home.Ownership.Mod 10177
-## 16          Employment.Length.Mod 19791
+## 1                Amount.Requested 29402
+## 2      Amount.Funded.By.Investors 32247
+## 3                     Loan.Length  5105
+## 4            Debt.To.Income.Ratio 32061
+## 5               Open.CREDIT.Lines 27214
+## 6  Inquiries.in.the.Last.6.Months 13903
+## 7                     Issued.Date 42150
+## 8            Earliest.CREDIT.Line 31655
+## 9              Total.CREDIT.Lines 29415
+## 10                   State.Region 38647
+## 11                       FICO.num 40197
+## 12             Monthly.Income.Log 30095
+## 13               Loan.Purpose.Mod 11064
+## 14             Home.Ownership.Mod 10126
+## 15          Employment.Length.Mod 19950
+## 16   Revolving.CREDIT.Balance.log 31864
 ```
 
 ```r
@@ -847,10 +911,10 @@ e.rf2
 
 ```
 ## $rmspe
-## [1] 1.547
+## [1] 1.544
 ## 
 ## $se
-## [1] 0.05663
+## [1] 0.05631
 ```
 
 ```r
@@ -866,22 +930,15 @@ The last random forest model performs better than the linear model and the naive
 ```r
 ## Methods evaluated on the 30% of the data using robust mean squared
 ## prediction error (rmspe)
-cv.flmaic
+rmspe(edata$Interest.Rate, predict(flm.aic, edata), includeSE = TRUE)
 ```
 
 ```
-## 10-fold CV results:
-##    CV 
-## 1.993
-```
-
-```r
-cv.flmaic$se
-```
-
-```
-##       CV 
-## 0.001444
+## $rmspe
+## [1] 1.976
+## 
+## $se
+## [1] 0.0614
 ```
 
 ```r
@@ -890,10 +947,10 @@ e.rf
 
 ```
 ## $rmspe
-## [1] 1.592
+## [1] 1.591
 ## 
 ## $se
-## [1] 0.05727
+## [1] 0.05723
 ```
 
 ```r
@@ -902,10 +959,10 @@ e.rf2
 
 ```
 ## $rmspe
-## [1] 1.547
+## [1] 1.544
 ## 
 ## $se
-## [1] 0.05663
+## [1] 0.05631
 ```
 
 
@@ -955,7 +1012,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##  32.172   1.242  42.900
+##  34.361   1.312  47.272
 ```
 
 
