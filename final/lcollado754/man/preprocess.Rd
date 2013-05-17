@@ -11,10 +11,12 @@
   previously mentioned data sets.}
 }
 \value{
-  A data.frame with 19 columns. The 17 columns from
+  A data.frame with 20 columns. The 17 columns from
   loansData and loansData2 properly merged and processed,
   plus the State Region code (01 to 10) according to the
-  AQS data set and the State Coast (East or West).
+  AQS data set and the State Coast (East or West). The
+  column \code{FICO.num} has the value of the mean of the
+  FICO range to use it as a numerical variable.
 }
 \description{
   Merge the data from the two data sets and format

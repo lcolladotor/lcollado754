@@ -1,6 +1,5 @@
 \docType{package}
 \name{lcollado754-package}
-\alias{lcollado754}
 \alias{lcollado754-package}
 \title{Final project for 140.754 (2013 version) by Leonardo Collado-Torres}
 \description{
