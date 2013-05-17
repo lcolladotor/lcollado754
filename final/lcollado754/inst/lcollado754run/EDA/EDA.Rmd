@@ -1,0 +1,14 @@
+Exploratory data analysis
+=========================
+
+Written by L. Collado-Torres.
+
+
+```{r loadData}
+## Load the data
+library(lcollado754)
+data <- preprocess()
+
+head(data)
+```
+

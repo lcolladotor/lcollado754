@@ -11,10 +11,13 @@ License: GPL-2
 LazyData: true
 Suggests:
     devtools,
-    plyr
+    plyr,
+    knitr,
+    markdown (>= 0.5.4)
 Collate:
     'lcollado754-package.R'
     'loansData2-data.R'
     'loansData-data.R'
     'preprocess.R'
     'states.R'
+    'reproduceAnalysis.R'

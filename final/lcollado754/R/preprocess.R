@@ -2,7 +2,7 @@
 #'
 #' Merge the data from the two data sets and format appropriately for use in R.
 #'
-#'@param data If \code{NULl} then it merges the two default data sets (loansData, loansData2). Otherwise, it must be a data.frame with the same columns as those in the previously mentioned data sets.
+#'@param data If \code{NULL} then it merges the two default data sets (loansData, loansData2). Otherwise, it must be a data.frame with the same columns as those in the previously mentioned data sets.
 #'
 #'@return A data.frame with 19 columns. The 17 columns from loansData and loansData2 properly merged and processed, plus the State Region code (01 to 10) according to the AQS data set and the State Coast (East or West).
 #'

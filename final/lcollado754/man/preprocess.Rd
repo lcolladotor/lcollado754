@@ -5,7 +5,7 @@
   preprocess(data = NULL)
 }
 \arguments{
-  \item{data}{If \code{NULl} then it merges the two default
+  \item{data}{If \code{NULL} then it merges the two default
   data sets (loansData, loansData2). Otherwise, it must be
   a data.frame with the same columns as those in the
   previously mentioned data sets.}
