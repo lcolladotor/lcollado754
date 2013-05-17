@@ -17,3 +17,4 @@ Collate:
     'loansData2-data.R'
     'loansData-data.R'
     'preprocess.R'
+    'states.R'

@@ -1,0 +1,19 @@
+Smoothing in class practice
+===========================
+
+Instructions [here](https://docs.google.com/document/d/1Vb5umhAVqGffA17HzkIMJirgCz0mXDrO-zvPiZFbVsY/edit).
+
+```{r loadData}
+library(ElemStatLearn)
+data <- ozone
+
+## Quick exploration
+head(data)
+summary(data)
+
+## Plot
+library(car)
+scatterplotMatrix(~ ozone + radiation + temperature + wind, data=data, spread=FALSE)
+```
+
+
