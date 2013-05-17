@@ -1,0 +1,197 @@
+Variable selection
+==================
+
+Written by [L. Collado-Torres](http://www.biostat.jhsph.edu/~lcollado/#.UZZK3ivF2L0).
+
+# Setup
+
+Load the data and get it ready to be used in the later steps.
+
+```{r loadData}
+## Pkgs used
+require(cvTools)
+require(randomForest)
+require(foreach)
+require(doSNOW)
+
+## Select the number of cores. By default 4 but can be passed externally to this Rmd file.
+## Basically, defined cores before running knit2html()
+if(! "cores" %in% ls()) cores <- 4
+registerDoSNOW(makeCluster(cores, type = "SOCK"))
+getDoParWorkers()
+
+## Load and process the data
+library(lcollado754)
+pre <- preprocess()
+fdata <- postprocess(pre)
+
+## Drop rows with missing information
+dim(fdata)
+fdata <- fdata[complete.cases(fdata), ]
+dim(fdata)
+
+## Quick exploration
+summary(fdata)
+
+## Separate into training and evaluation data sets
+set.seed(20130517)
+set.idx <- sample(c(TRUE, FALSE), nrow(fdata), replace=TRUE, prob=c(0.7, 0.3))
+
+## data will be the training data, edata will be the data set for evaluating
+data <- fdata[set.idx, ]
+edata <- fdata[!set.idx, ]
+
+## Check that the proportion of obs reserved for evaluating the methods is around 30%
+nrow(edata) / (nrow(edata) + nrow(data))
+```
+
+
+# Linear model
+
+Below I fit a linear model, which technically is not correct because the interest rate has a domain of $[0, 100]$. But in the EDA steps it looked fairly bell-shaped and thus the linear model might be good enough. In addition, other variables had bell-shaped distributions.
+
+When exploring the single term deletions, the FICO score is by far the one that affects the model the most.
+
+As we can see, the variable selection does reduce the number of variables and keeps the following ones:
+* Amount requested
+* Amount funded by investors
+* Loan length
+* Debt to income ratio
+* The number of open credit lines
+* Number of inquiries in the last 6 months
+* Issued date
+* Earliest credit line
+* FICO (a must!)
+* The log of the monthly income
+* The loan purpose
+* Home ownership status
+
+Furthermore, we have evidence that the variable selected model performs better than the minimal model of just using the FICO score to determine the interest rate. However the full model is not significantly different from the variable selected model.
+
+Finally, the diagnostic plots for the variable selected model look decent enough. Although there are a few observations that have much higher leverage. In more detail, some of these cases have very high revolving credit balance. It is hard to tell whether other factors are outliers as from a quick exploration most of the values seem to be within the first and third quartiles.
+
+```{r lm}
+flm <- lm(Interest.Rate ~ ., data=data)
+summary(flm)
+
+## Simple drop results
+drop1(flm)
+
+## Quick step-wise variable selection
+flm.aic <- step(flm, trace=0)
+summary(flm.aic)
+
+## Minimal model
+small <- lm(Interest.Rate ~ FICO.num, data=data)
+summary(small)
+
+## Is the model an improvement over just using the FICO score?
+anova(small, flm.aic, flm)
+
+## Diagnostic plots
+plot(flm.aic)
+
+## A deeper look at the observations with high leverage
+data[hatvalues(flm.aic) > 0.03, ]
+```
+
+# Cross-validate the linear model
+
+```{r cv}
+## CV setup
+seed <- 201305017
+K <- 10
+R <- 5
+set.seed(seed)
+folds <- cvFolds(nrow(data), K = K, R = R)
+
+## Run it
+cv.flmaic <- cvFit(flm.aic, y=data$Interest.Rate, data=data, folds=folds, costArgs = list(includeSE = TRUE))
+
+## Estimate of the prediction error using rmspe: robust mean squared prediction error 
+cv.flmaic
+cv.flmaic$se
+```
+
+# Random forest
+
+```{r rf}
+#rf <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(x = data, y = data$Interest.Rate, data = data, xtest = edata, ytest = edata$Interest.Rate, importance = TRUE, keep.forest = TRUE, ntree = ntree)
+rf <- foreach(ntree = rep(200, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(Interest.Rate ~ ., data = data, importance = TRUE, keep.forest = TRUE, ntree = ntree, xtest=edata[, -which(colnames(edata) == "Interest.Rate")], ytest=edata$Interest.Rate)
+
+## Importance
+rf$importance
+rf$importanceSD
+
+## Importance plot
+varImpPlot(rf)
+
+## variables used
+rf.used <- data.frame("Var"=rownames(rf$importance), "Used"=varUsed(rf))
+rf.used
+
+## Prediction error
+e.rf <- rmspe(edata$Interest.Rate, predict(rf, edata), includeSE = TRUE)
+e.rf
+
+## Cross validate the rf and see how many variables should be used: result is 8
+rf.cv <- rfcv(trainx=data[, -which(colnames(data) == "Interest.Rate")], trainy=data$Interest.Rate, keep.forest=TRUE, ntree=100)
+with(rf.cv, plot(n.var, error.cv, log="x", type="o", lwd=2))
+
+## Select the top 8 variables
+varsToUse <- rownames(rf$importance)[order(rf$importance[, 1], decreasing=TRUE)[1:8]]
+varsToUse
+
+## Looks similar to the ones selected with lm and step
+flm.aic$call
+
+## Random forest with 
+paste(varsToUse, collapse=" + ") # To get the vars
+rf2 <- foreach(ntree = rep(100, cores), .combine = combine, .packages = "randomForest") %dopar% randomForest(Interest.Rate ~ FICO.num + Loan.Length + Amount.Funded.By.Investors + Amount.Requested + Issued.Date + Inquiries.in.the.Last.6.Months + Open.CREDIT.Lines + Revolving.CREDIT.Balance, data = data, importance = TRUE, keep.forest = TRUE, ntree = ntree, xtest=edata[, which(colnames(edata) %in% varsToUse)], ytest=edata$Interest.Rate)
+
+## Importance
+rf2$importance
+rf2$importanceSD
+
+## Importance plot
+varImpPlot(rf2)
+
+## variables used
+rf2.used <- data.frame("Var"=rownames(rf$importance), "Used"=varUsed(rf))
+rf2.used
+
+## Prediction error
+e.rf2 <- rmspe(edata$Interest.Rate, predict(rf2, edata), includeSE = TRUE)
+e.rf2
+## Slightly better than before
+```
+
+# Evaluate the methods
+
+The last random forest model performs better than the linear model and the naive random forest. This model will be used in the successive steps.
+
+```{r evaluate}
+## Methods evaluated on the 30% of the data using robust mean squared prediction error (rmspe)
+cv.flmaic
+cv.flmaic$se
+e.rf
+e.rf2
+```
+
+# Save the model to be used
+
+```{r model}
+
+model <- rf2
+save(model, file="model.Rdata")
+```
+
+
+# Reproducibility
+
+```{r reproducibility}
+sessionInfo()
+print(proc.time())
+```
+
+

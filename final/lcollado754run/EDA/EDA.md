@@ -1,7 +1,7 @@
 Exploratory data analysis
 =========================
 
-Written by L. Collado-Torres.
+Written by [L. Collado-Torres](http://www.biostat.jhsph.edu/~lcollado/#.UZZK3ivF2L0).
 
 # Data
 
@@ -645,7 +645,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##  12.726   0.335  15.315
+##  12.214   0.318  12.421
 ```
 
 

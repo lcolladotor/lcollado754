@@ -14,6 +14,10 @@ Suggests:
     plyr,
     knitr,
     markdown (>= 0.5.4),
+    cvTools,
+    randomForest,
+    foreach,
+    doSNOW,
     car
 Collate:
     'lcollado754-package.R'
@@ -23,3 +27,4 @@ Collate:
     'states.R'
     'reproduceAnalysis.R'
     'postprocess.R'
+    'inferInterestRate.R'

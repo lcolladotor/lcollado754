@@ -1,0 +1,32 @@
+Example about how to infer the interest rate
+============================================
+
+Written by [L. Collado-Torres](http://www.biostat.jhsph.edu/~lcollado/#.UZZK3ivF2L0).
+
+# Get predictions
+
+Below I get predictions for the 
+
+```{r predict}
+## Setup
+library(lcollado754)
+
+## Define some data to predict with
+pre <- preprocess()
+data <- postprocess(data)
+
+topred <- head(data)
+
+## Using the model built-in the package or pass down from reproduceAnalysis() using the fresh built model
+if(! "model" %in% ls()) model <- NULL
+preds <- inferInterestRate(topred=topred, model=model)
+
+## Results
+preds
+```
+
+# Reproducibility
+```{r reproducibility}
+sessionInfo()
+print(proc.time())
+```

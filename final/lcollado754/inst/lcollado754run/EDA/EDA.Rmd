@@ -1,7 +1,7 @@
 Exploratory data analysis
 =========================
 
-Written by L. Collado-Torres.
+Written by [L. Collado-Torres](http://www.biostat.jhsph.edu/~lcollado/#.UZZK3ivF2L0).
 
 # Data
 

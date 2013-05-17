@@ -3,7 +3,7 @@ library(devtools)
 ## Create the backbone:
 if(FALSE) create("lcollado754")
 
-## Create the document fresh
+## Create the documentation fresh
 document("lcollado754", clean=TRUE)
 
 ## Check the doc, pkg

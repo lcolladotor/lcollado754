@@ -1,3 +1,4 @@
+export(inferInterestRate)
 export(postprocess)
 export(preprocess)
 export(reproduceAnalysis)
