@@ -31,10 +31,6 @@ data <- preprocess()
 ```
 
 ```
-## Loading required package: plyr
-```
-
-```
 ## Joining by: Amount.Requested, Amount.Funded.By.Investors, Interest.Rate,
 ## Loan.Length, Loan.Purpose, Debt.To.Income.Ratio, State, Home.Ownership,
 ## Monthly.Income, FICO.Range, Open.CREDIT.Lines, Revolving.CREDIT.Balance,
@@ -631,8 +627,8 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] plyr_1.8        car_2.0-17      nnet_7.3-6      MASS_7.3-26    
-## [5] markdown_0.5.4  knitr_1.2       lcollado754_0.1
+## [1] car_2.0-17      nnet_7.3-6      MASS_7.3-26     markdown_0.5.4 
+## [5] knitr_1.2       plyr_1.8        lcollado754_0.1
 ## 
 ## loaded via a namespace (and not attached):
 ## [1] digest_0.6.3   evaluate_0.4.3 formatR_0.7    stringr_0.6.2 
@@ -645,7 +641,7 @@ print(proc.time())
 
 ```
 ##    user  system elapsed 
-##  12.824   0.333  13.129
+##  15.040   0.871 212.833
 ```
 
 
